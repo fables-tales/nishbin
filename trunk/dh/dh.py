@@ -5,7 +5,7 @@ import gmpy
 
 class Dh:
 	def __init__(self):
-		seed(sha256(str(time())).hexdigest() + sha256(str(randint(0,2**32))).hexdigest())
+		seed(sha256(sha256(str(time())).hexdigest() + sha256(str(randint(0,2**32))).hexdigest()).hexdigest())
 		self.g = None
 		self.p = None
 		self.a = None
