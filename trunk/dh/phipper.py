@@ -21,7 +21,6 @@ class Request:
 		frame += make_even_length(str(self.Dh.p)).decode("hex")
 		frame += ":"
 		frame += make_even_length(str(self.Dh.k1)).decode("hex")
-		frame += ""
 		return frame
 		
 	def recv_data(self,response):
