@@ -1,9 +1,11 @@
 from random import randint,randrange,seed
-from time import time()
+from time import time
+from hashlib import sha256
 import gmpy
+
 class Dh:
 	def __init__(self):
-		seed(time())
+		seed(sha256(str(time())).hexdigest() + sha256(str(randint(0,2**32))).hexdigest())
 		self.g = None
 		self.p = None
 		self.a = None
