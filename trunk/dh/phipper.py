@@ -9,7 +9,6 @@ def make_even_length(string):
 		
 class Request:
 	def __init__(self):
-		
 		self.Dh = Dh()
 		self.Dh.gen_g_p()
 		self.Dh.gen_a()
@@ -62,15 +61,15 @@ class Response:
 		return frame
 		
 if __name__ == "__main__":
-	rq = Request()
-	re = Response()
-	data = rq.send_data()
-	re.recv_data(data)
-	response = re.send_data()
-	rq.recv_data(response)
-	rq.compute_key()
-	print rq.Dh.key
-	print re.Dh.key
-	#print [data]
-	#print [response]
-	assert rq.Dh.key == re.Dh.key
+	for i in range(0,32):
+		rq = Request()
+		re = Response()
+		data = rq.send_data()
+		re.recv_data(data)
+		response = re.send_data()
+		rq.recv_data(response)
+		rq.compute_key()
+		print re.Dh.key
+		#print [data]
+		#print [response]
+		assert rq.Dh.key == re.Dh.key
