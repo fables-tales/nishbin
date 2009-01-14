@@ -5,7 +5,7 @@ import gmpy
 
 class Dh:
 	def __init__(self):
-		seed(sha256(sha256(str(time())).hexdigest() + sha256(str(randint(0,2**32))).hexdigest()).hexdigest())
+		seed(sha256(sha256(str(time())).hexdigest() + sha256(str(randint(0,2**256))).hexdigest()).hexdigest())
 		self.g = None
 		self.p = None
 		self.a = None
@@ -17,14 +17,15 @@ class Dh:
 		self.p = gmpy.next_prime(randint(0,2**256))
 		
 	def gen_a(self):
-		
 		ta = randint(1,2**256)
 		while ta > self.p:
 			ta = randint(1,2**256)
 		self.a = gmpy.next_prime(ta)
 		ta = None
+		
 	def compute_k1(self):
 		self.k1 = pow(self.g,self.a,self.p)
+		
 	def get_key(self):
 		if self.k1 is not None and self.k2 is not None:
 			self.key = pow(self.k2,self.a,self.p)
@@ -41,6 +42,7 @@ if __name__ == "__main__":
 	t2.compute_k1()
 	t1.k2 = t2.k1
 	t2.k2 = t1.k1
+	
 	t1.get_key()
 	t2.get_key()
 	print t1.key
