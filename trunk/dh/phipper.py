@@ -9,6 +9,7 @@ def make_even_length(string):
 		
 class Request:
 	def __init__(self):
+		
 		self.Dh = Dh()
 		self.Dh.gen_g_p()
 		self.Dh.gen_a()

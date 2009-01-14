@@ -1,7 +1,9 @@
-from random import randint,randrange
+from random import randint,randrange,seed
+from time import time()
 import gmpy
 class Dh:
 	def __init__(self):
+		seed(time())
 		self.g = None
 		self.p = None
 		self.a = None
