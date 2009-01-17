@@ -7,6 +7,7 @@ def create_key_for_n_chunks(n):
 	for i in range(0,(256/8)*n):
 		key += chr(getRandomNumber(7))
 	return key
+	
 def create_split_key_and_iv_for_n_chunks(n):
 	key = create_key_for_n_chunks(n)
 	iv = create_key_for_n_chunks(n)
@@ -16,6 +17,7 @@ def create_split_key_and_iv_for_n_chunks(n):
 		subkeys.append(key[i*(256/8):(i+1)*(256/8)])
 		subivs.append(iv[i*(256/8):(i+1)*(256/8)])
 	return (subkeys,subivs)
+	
 def recover_key_and_create_aes_object(split_key,split_iv):
 	recovered_key = ""
 	recovered_iv = ""
@@ -27,6 +29,9 @@ def recover_key_and_create_aes_object(split_key,split_iv):
 	actual_iv = md5(recovered_iv).digest()
 	aes = AES.new(actual_key,AES.MODE_CBC,actual_iv)
 	return aes
+	
+def make_string_possible(string):
+	while len(string) % 16 != 0:
+		string += "\x00"
+	return string
 
-#print recover_key_and_create_aes_object(["d","b"],["c","a"])
-key,iv= create_split_key_and_iv_for_n_chunks(16)
