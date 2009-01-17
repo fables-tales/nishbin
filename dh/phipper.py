@@ -21,6 +21,7 @@ class Request:
 		frame += make_even_length(str(self.Dh.p)).decode("hex")
 		frame += ":"
 		frame += make_even_length(str(self.Dh.k1)).decode("hex")
+		frame += ""
 		return frame
 		
 	def recv_data(self,response):
@@ -61,15 +62,15 @@ class Response:
 		return frame
 		
 if __name__ == "__main__":
-	for i in range(0,32):
-		rq = Request()
-		re = Response()
-		data = rq.send_data()
-		re.recv_data(data)
-		response = re.send_data()
-		rq.recv_data(response)
-		rq.compute_key()
-		print re.Dh.key
-		#print [data]
-		#print [response]
-		assert rq.Dh.key == re.Dh.key
+	rq = Request()
+	re = Response()
+	data = rq.send_data()
+	re.recv_data(data)
+	response = re.send_data()
+	rq.recv_data(response)
+	rq.compute_key()
+	print rq.Dh.key
+	print re.Dh.key
+	#print [data]
+	#print [response]
+	assert rq.Dh.key == re.Dh.key
