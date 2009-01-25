@@ -37,7 +37,8 @@ namespace libnish.PeerFinders
 
         public bool TryConnect(out Peer Peer)
         {
-            
+			Peer = null;
+			return true;
         }
     }
 
