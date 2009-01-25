@@ -41,7 +41,7 @@
     <Compile Include="PeerFinders\PeerFinder.cs" />
     <Compile Include="PeerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Trapdoor.cs" />
+    <Compile Include="TrapdoorConnection.cs" />
     <Compile Include="TrapdoorIntent.cs" />
     <Compile Include="TrapdoorManager.cs" />
   </ItemGroup>
