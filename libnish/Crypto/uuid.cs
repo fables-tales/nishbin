@@ -19,7 +19,7 @@ namespace libnish.Crypto
 			string seed2 = RandomGenerator.Next().ToString();	
 			System.Guid t1 = new Guid(seed1);
 			System.Guid t2 = new Guid(seed2);
-			return t1.ToString() + "-" + t2.ToString();
+			return string.Format("%s-%s",t1.ToString(),t2.ToString());
 		}
 	}
 }
