@@ -55,6 +55,7 @@
     <Compile Include="TrapdoorConnection.cs" />
     <Compile Include="TrapdoorIntent.cs" />
     <Compile Include="TrapdoorManager.cs" />
+    <Compile Include="Crypto\uuid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
