@@ -10,16 +10,20 @@ namespace libnish.Crypto
 {
 	
 	
-	public class uuid
+	public class UUID
 	{
 		
-		public string GenerateUUID(){
+		private string suuid; 		
+		public UUID(){
 			Random RandomGenerator = new System.Random();
 			string seed1 = RandomGenerator.Next().ToString();
 			string seed2 = RandomGenerator.Next().ToString();	
 			System.Guid t1 = new Guid(seed1);
 			System.Guid t2 = new Guid(seed2);
-			return string.Format("%s-%s",t1.ToString(),t2.ToString());
+			suuid = string.Format("%s-%s",t1.ToString(),t2.ToString());
+		}
+		public string uuid{
+			get { return suuid; }
 		}
 	}
 }
