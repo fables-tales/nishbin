@@ -15,7 +15,7 @@ namespace libnish
 		
 		public dh()
 		{
-			string d = "hi";
+			
 		}
 	}
 }
