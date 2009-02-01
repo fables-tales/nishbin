@@ -25,7 +25,7 @@ namespace libnish
             return Content;
         }
 
-        public Packet FromUnencryptedByteArray(byte[] Contents)
+        public static Packet FromUnencryptedByteArray(byte[] Contents)
         {
             if (Contents.Length < 4)
                 throw new Exception("Invalid packet.");
