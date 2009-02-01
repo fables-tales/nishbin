@@ -30,7 +30,7 @@ namespace libnish.PeerFinders
             return ((a.IP == b.IP) && (a.Port == b.Port));
         }
 
-        public static bool operator !=(PotentialPeer a, PotentialPeer b)
+        public static bool operator != (PotentialPeer a, PotentialPeer b)
         {
             return ((a.IP != b.IP) || (a.Port != b.Port));
         }
