@@ -5,6 +5,7 @@
 //
 
 using System;
+using GMP;
 
 namespace libnish
 {
@@ -13,9 +14,17 @@ namespace libnish
 	public class dh
 	{
 		
+		private Random Generator = new Random();
+		public GMP.Integer g,p,a,k1,k2,key;
 		public dh()
 		{
-			
+			g = 0;
+			p = 0;
+			a = 0;
+			k1 = 0;
+			k2 = 0;
+			key = 0;
 		}
+		
 	}
 }
