@@ -25,5 +25,10 @@ namespace libnish.Crypto
 		public string uuid{
 			get { return suuid; }
 		}
+		public bool verifyuuid(string uuid){
+			//TODO: actually impliment this
+			
+			throw new Exception("PYTHON FTW");
+		}
 	}
 }
