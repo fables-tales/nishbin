@@ -12,6 +12,19 @@ using Mono.Math;
 namespace libnish.Crypto
 {
 	
+	/*
+	 * The actual dh protocol:
+	 * person a: generate g and p, send to person b
+	 * person b: accept g and p and respond with an acknowledgement (usually a hash of a + b)
+	 * person a: generate a, compute k1 = (g^a) mod p
+	 * person b: generate b, compute k2 = (g^b) mod p
+	 * preson a: send k1 to person b
+	 * person b: send k2 to person a
+	 * person a: compute key = (k2^a) mod p
+	 * person b: compute key = (k1^b) mod p
+	 * 
+	 * due to the laws of exponentiation, (k2^a) mod p == (k1^b) mod p  
+	 * */
 	
 	public class dh
 	{
