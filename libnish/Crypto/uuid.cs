@@ -10,25 +10,32 @@ namespace libnish.Crypto
 {
 	
 	
-	public class UUID
+	public static class UUID
 	{
 		
-		private string suuid; 		
-		public UUID(){
+		 		
+		public static string  getUUID(){
 			Random RandomGenerator = new System.Random();
 			string seed1 = RandomGenerator.Next().ToString();
-			string seed2 = RandomGenerator.Next().ToString();	
+			string seed2 = RandomGenerator.Next().ToString();
+			string suuid;
 			System.Guid t1 = new Guid(seed1);
 			System.Guid t2 = new Guid(seed2);
 			suuid = string.Format("%s-%s",t1.ToString(),t2.ToString());
+			return suuid;
 		}
-		public string uuid{
-			get { return suuid; }
-		}
-		public bool verifyuuid(string uuid){
+		public static bool verifyuuid(string auuid){
 			//TODO: actually impliment this
-			
-			throw new Exception("PYTHON FTW");
+			string[] split1;
+			string[] split2;
+			if (auuid.Length == getUUID().Length){
+				split1 = auuid.Split('-');
+				split2 = getUUID().Split('-');
+				if (split1.Length == split2.Length){
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
