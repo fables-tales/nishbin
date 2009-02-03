@@ -14,12 +14,16 @@ namespace libnish
 
         static Thread P2PThread;
 
+        public delegate void voidThing();
+
         public static void Initialise(Peer[] InitialPeers, PeerFinder[] InitialPeerFinders)
         {
             Peers.AddRange(InitialPeers);
             PeerFinders.AddRange(InitialPeerFinders);
             
             //P2PThread = new Thread(new ThreadStart(
+
+            //((voidThing)dh.getRandomNumber()).Invoke();
         }
     }
 }
