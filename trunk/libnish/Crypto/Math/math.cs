@@ -19,6 +19,7 @@ namespace libnish.Crypto.Math
 			return BigInteger.GenerateRandom(bits);
 		}
 		public static BigInteger makePrime(int bits){
+			//TODO: make this more bullet proof
 			return BigInteger.GeneratePseudoPrime(bits);
 		}
 		

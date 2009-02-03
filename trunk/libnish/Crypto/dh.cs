@@ -5,7 +5,6 @@
 //
 
 using System;
-using GMP;
 using Mono.Math;
 
 
@@ -22,12 +21,12 @@ namespace libnish.Crypto
 		
 		public dh()
 		{
-			a = new BigInteger(0);
-			g = new BigInteger(0);
-			p = new BigInteger(0);
-			k1 = new BigInteger(0);
-			k2 = new BigInteger(0);
-			key = new BigInteger(0);
+			a = null;
+			g = null;
+			p = null;
+			k1 = null;
+			k2 = null;
+			key = null;
 		}
 		//G and P are the variables that everyone knows.
 		public void generateGP(){
