@@ -14,6 +14,24 @@ namespace libnish
         RequestChunks
     }
 
+    public class BadPacketException : Exception
+    {
+        string desc;
+
+        public BadPacketException(string Description)
+        {
+            desc = Description;
+        }
+
+        public override string Message
+        {
+            get
+            {
+                return desc;
+            }
+        }
+    }
+
     public abstract class Packet
     {
         internal byte[] Content;
@@ -52,7 +70,6 @@ namespace libnish
 
     public class MetaNotifyPacket : Packet
     {
-        // TODO: Verify set UUIDs are valid?
         public string ContainingUUID
         {
             get
@@ -61,18 +78,27 @@ namespace libnish
             }
             set
             {
+                if (!Crypto.UUID.verifyuuid(value))
+                    throw new BadPacketException("Invalid UUID set.");
+
                 Content = System.Text.Encoding.ASCII.GetBytes("META " + value);
             }
         }
 
         public MetaNotifyPacket(string UUID)
         {
+            if (!Crypto.UUID.verifyuuid(UUID))
+                throw new BadPacketException("Invalid UUID");
+
             ContainingUUID = UUID;
         }
 
         public MetaNotifyPacket(byte[] UnencryptedContent)
         {
             this.Content = UnencryptedContent;
+
+            if (!Crypto.UUID.verifyuuid(ContainingUUID))
+                throw new BadPacketException("Bad packet - contains invalid UUID!");
         }
 
         public override PacketType Type
@@ -134,13 +160,19 @@ namespace libnish
             if (s.Length != 3)
                 throw new Exception("Invalid NewThread packet, expected three args.");
 
-            // can't use properties b/c
+            // can't use properties b/c they always rebuild the byte array...which would cause problems with unset vars.
+            if (!Crypto.UUID.verifyuuid(s[1]))
+                throw new BadPacketException("Bad packet -- invalid UUID!");
+
             CachedUUID = s[1];
             CachedFirstMessage = System.Web.HttpUtility.UrlDecode(s[2]);
         }
 
         public NewThreadPacket(string UUID, string FirstMessage)
         {
+            if (!Crypto.UUID.verifyuuid(UUID))
+                throw new BadPacketException("Invalid UUID");
+
             this.UUID = UUID;
             this.FirstMessage = FirstMessage;
         }
@@ -153,7 +185,9 @@ namespace libnish
             }
             set
             {
-                // TODO: Validate!
+                if (!Crypto.UUID.verifyuuid(value))
+                    throw new BadPacketException("Invalid UUID set.");
+
                 CachedUUID = value;
                 RebuildByteArray();
             }
@@ -175,7 +209,11 @@ namespace libnish
 
         private void RebuildByteArray()
         {
-            // TODO: validation!
+            if (!Crypto.UUID.verifyuuid(CachedUUID))
+                throw new BadPacketException("Bad packet, invalid UUID!");
+
+            // TODO: msg validation
+
             Content = System.Text.Encoding.ASCII.GetBytes("THRD " + CachedUUID + " " + System.Web.HttpUtility.UrlEncode(CachedFirstMessage));
         }
 
@@ -202,12 +240,18 @@ namespace libnish
                 throw new Exception("Invalid NewPost packet, expected three args.");
 
             // can't use properties b/c
+            if (!Crypto.UUID.verifyuuid(s[1]))
+                throw new BadPacketException("Bad packet -- invalid UUID!");
+
             CachedUUID = s[1];
             CachedMessage = System.Web.HttpUtility.UrlDecode(s[2]);
         }
 
         public NewPostPacket(string UUID, string Message)
         {
+            if (!Crypto.UUID.verifyuuid(UUID))
+                throw new BadPacketException("Invalid UUID");
+
             this.UUID = UUID;
             this.Message = Message;
         }
@@ -220,7 +264,9 @@ namespace libnish
             }
             set
             {
-                // TODO: Validate!
+                if (!Crypto.UUID.verifyuuid(value))
+                    throw new BadPacketException("Invalid UUID set.");
+
                 CachedUUID = value;
                 RebuildByteArray();
             }
@@ -242,7 +288,11 @@ namespace libnish
 
         private void RebuildByteArray()
         {
-            // TODO: validation!
+            if (!Crypto.UUID.verifyuuid(CachedUUID))
+                throw new BadPacketException("Bad packet, invalid UUID!");
+
+            // TODO: msg validation
+
             Content = System.Text.Encoding.ASCII.GetBytes("THRD " + CachedUUID + " " + System.Web.HttpUtility.UrlEncode(CachedMessage));
         }
 
