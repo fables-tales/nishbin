@@ -52,6 +52,7 @@
       <HintPath>..\..\..\pwn\GMP-Sharp\gmp.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packets.cs" />

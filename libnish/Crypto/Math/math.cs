@@ -5,7 +5,8 @@
 //
 
 using System;
-using GMP;
+using Mono.Math;
+
 
 namespace libnish.Crypto.Math
 {
@@ -14,18 +15,11 @@ namespace libnish.Crypto.Math
 	public static class math
 	{
 		
-		public static GMP.Integer randgmp(int bits){
-			Random Generator = new Random();
-			GMP.Integer g = new GMP.Integer(0);
-			byte[] buffer = new byte[bits/8];
-			Generator.NextBytes(buffer);
-			
-			for(int i = 0;i<(bits/8);i++){
-				g += buffer[i] << (i*8);
-				
-			}
-			return g;
-			
+		public static BigInteger getRandom(int bits){
+			return BigInteger.GenerateRandom(bits);
+		}
+		public static BigInteger makePrime(int bits){
+			return BigInteger.GeneratePseudoPrime(bits);
 		}
 		
 	}
