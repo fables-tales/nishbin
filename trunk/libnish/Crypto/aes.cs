@@ -16,7 +16,8 @@ namespace libnish
 	public class aes
 	{
 		private Rijndael handler;
-		
+        private ICryptoTransform dec;
+        private ICryptoTransform enc;
 
         public aes()
         {
@@ -25,35 +26,40 @@ namespace libnish
             // When no key is provided, we generate one.
             handler.GenerateKey();   
 			handler.Mode = CipherMode.CBC;
-        }
 
+            dec = handler.CreateDecryptor();
+            enc = handler.CreateEncryptor();
+        }
+        
 		public aes(byte[] pkey)
 		{
             handler = RijndaelManaged.Create();
             handler.GenerateIV();
             handler.Key = pkey;
 			handler.Mode = CipherMode.CBC;
-			
-			
+
+            dec = handler.CreateDecryptor();
+            enc = handler.CreateEncryptor();
 		}
 
 		public byte[] decrypt(byte[] ciphertext)
         {
+
             // Use the provided byte[] buffer as a backing store to read out of
 			MemoryStream t = new MemoryStream(ciphertext);
             // Stream automatically decrypts as we read data out of it.
-			CryptoStream Decryptor = new CryptoStream(t, handler.CreateDecryptor(), CryptoStreamMode.Read);
+			CryptoStream Decryptor = new CryptoStream(t, dec, CryptoStreamMode.Read);
             // Read data back out of the CryptoStream.
             byte[] plaintext = new byte[Decryptor.Length];
             Decryptor.Read(plaintext, 0, (int) Decryptor.Length); // if it doesn't fit in an int, its > 2gb anyway. deserves to crash...
 
 			return plaintext;
 		}
-
+        
 		public byte[] encrypt(byte[] plaintext)
         {
 			MemoryStream t = new MemoryStream(plaintext);
-			CryptoStream Encryptor = new CryptoStream(t, handler.CreateEncryptor(), CryptoStreamMode.Write);
+			CryptoStream Encryptor = new CryptoStream(t, enc, CryptoStreamMode.Read);
             byte[] ciphertext = new byte[Encryptor.Length];
             Encryptor.Read(ciphertext, 0, (int) Encryptor.Length);
 
