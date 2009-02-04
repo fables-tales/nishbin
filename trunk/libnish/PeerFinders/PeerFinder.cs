@@ -22,7 +22,8 @@ namespace libnish.PeerFinders
         public override int GetHashCode()
         {
             // rly rly don't care
-            return base.GetHashCode();
+            // TODO:: Validate IP, make sure IP is IPv4 address (or fix following code to do v6 too:)
+            return (((long)int.Parse(IP.Replace(".", "")) << 32) + Port).GetHashCode();
         }
 
         public static bool operator == (PotentialPeer a, PotentialPeer b)

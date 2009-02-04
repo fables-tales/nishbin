@@ -7,19 +7,23 @@ using System.Threading;
 
 namespace libnish
 {
-    public static class PeerManager
+    public class PeerManager
     {
-        static List<Peer> Peers = new List<Peer>();
-        static List<PeerFinder> PeerFinders = new List<PeerFinder>();
+        List<Peer> Peers = new List<Peer>();
+        List<PeerFinder> PeerFinders = new List<PeerFinder>();
 
-        static Thread P2PThread;
+        Thread P2PThread;
 
-        public delegate void voidThing();
+        int TargetPeerCount;
+        int MaxPeerCount;
 
-        public static void Initialise(Peer[] InitialPeers, PeerFinder[] InitialPeerFinders)
+        public PeerManager(Peer[] InitialPeers, PeerFinder[] InitialPeerFinders, int TargetPeerNum, int MaxPeerNum)
         {
             Peers.AddRange(InitialPeers);
             PeerFinders.AddRange(InitialPeerFinders);
+
+            TargetPeerCount = TargetPeerNum;
+            MaxPeerCount = MaxPeerNum;
             
             //P2PThread = new Thread(new ThreadStart(
 
