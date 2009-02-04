@@ -7,6 +7,8 @@
 using System;
 using System.Security.Cryptography;
 
+using System.IO;
+
 namespace libnish
 {
 	
@@ -16,45 +18,58 @@ namespace libnish
 		private Rijndael handler;
 		private byte[] key;
 		private byte[] IV;
+
+        public aes()
+        {
+            handler = RijndaelManaged.Create();
+            handler.GenerateIV();
+            IV = handler.IV;
+
+            // When no key is provided, we generate one.
+            handler.GenerateKey();
+            key = handler.Key;
+        }
+
 		public aes(byte[] pkey)
 		{
-			handler = RijndaelManaged.Create();
-			handler.GenerateIV();
-			IV = handler.IV;
-			if (pkey == null){
-				handler.GenerateKey();
-				key = handler.Key;
-			} else{
-				handler.Key = pkey;
-				key = pkey;
-			}
+            handler = RijndaelManaged.Create();
+            handler.GenerateIV();
+            IV = handler.IV;
+
+			handler.Key = pkey;
+			key = pkey;
 		}
-		public byte[] decrypt(byte[] ciphertext){
-			byte[] plaintext = null;
-			System.IO.MemoryStream t = new System.IO.MemoryStream();
-			t.Write(ciphertext,0,ciphertext.Length);
-			t.Position = 0;
+
+		public byte[] decrypt(byte[] ciphertext)
+        {
+            // Use the provided byte[] buffer as a backing store to read out of
+			MemoryStream t = new MemoryStream(ciphertext);
+
+            // Setup
 			handler.Key = key;
 			handler.IV = IV;
-			CryptoStream Decryptor = new CryptoStream(t,handler.CreateDecryptor(),CryptoStreamMode.Read);
-			System.IO.BinaryReader getByte = new System.IO.BinaryReader(Decryptor);
-			plaintext = getByte.ReadBytes(ciphertext.Length);
+
+            // Stream automatically decrypts as we read data out of it.
+			CryptoStream Decryptor = new CryptoStream(t, handler.CreateDecryptor(), CryptoStreamMode.Read);
+
+            // Read data back out of the CryptoStream.
+            byte[] plaintext = new byte[Decryptor.Length];
+            Decryptor.Read(plaintext, 0, (int) Decryptor.Length); // if it doesn't fit in an int, its > 2gb anyway. deserves to crash...
+
 			return plaintext;
-			
 		}
-		public byte[] encrypt(byte[] plaintext){
-			byte[] ciphertext = null;
-			System.IO.MemoryStream t = new System.IO.MemoryStream();
-			t.Write(plaintext,0,plaintext.Length);
-			t.Position = 0;
+
+		public byte[] encrypt(byte[] plaintext)
+        {
+			MemoryStream t = new MemoryStream(plaintext);
+
 			handler.Key = key;
 			handler.IV = IV;
-			CryptoStream Encryptor = new CryptoStream(t,handler.CreateEncryptor(),CryptoStreamMode.Write);
-			//System.IO.StreamWriter putByte = new System.IO.StreamWriter(Encryptor);
-			System.IO.BinaryWriter putByte = new System.IO.BinaryWriter(Encryptor);
-			putByte.Write(plaintext,0,plaintext.Length);
-			t.Read(ciphertext,0,plaintext.Length);
-			
+
+			CryptoStream Encryptor = new CryptoStream(t, handler.CreateEncryptor(), CryptoStreamMode.Write);
+
+            byte[] ciphertext = new byte[Encryptor.Length];
+            Encryptor.Read(ciphertext, 0, (int) Encryptor.Length);
 
 			return ciphertext;
 		}
