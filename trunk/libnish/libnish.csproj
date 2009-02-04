@@ -44,7 +44,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+    <Reference Include="Mono.Security">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>deps\Mono.Security.dll</HintPath>
     </Reference>
@@ -67,6 +67,7 @@
     <Compile Include="TrapdoorManager.cs" />
     <Compile Include="Crypto\uuid.cs" />
     <Compile Include="Crypto\Math\math.cs" />
+    <Compile Include="Crypto\aes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
