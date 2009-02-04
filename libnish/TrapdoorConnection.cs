@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Security;
+using System.IO;
 
 namespace libnish
 {
@@ -9,7 +11,7 @@ namespace libnish
     {
         public TrapdoorConnection(TcpClient Socket)
         {
-
+            
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace libnish
 {
-    class TrapdoorManager
+    public class TrapdoorManager
     {
     }
 }
