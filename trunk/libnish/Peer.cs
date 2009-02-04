@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using System.Text;
 using System.Net.Sockets;
+using System.IO;
 
 namespace libnish
 {
@@ -23,6 +24,7 @@ namespace libnish
             IP = InfoIPAddress;
             Port = InfoPort;
             this.Limits = Limits;
+            
         }
 
         private void Send(byte[] RawData)
