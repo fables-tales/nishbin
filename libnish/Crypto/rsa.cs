@@ -17,8 +17,8 @@ namespace libnish.Crypto
 		private BigInteger p,q,n,e,d;
 		public rsa()
 		{
-			p = Math.math.makePrime(8192);
-			q = Math.math.makePrime(8192);
+			p = Math.math.makePrime(4096);
+			q = Math.math.makePrime(4096);
 			n = p*q;
 			BigInteger store = (p-1)*(q-1);
 			if (store.GCD(65537) == 1){
@@ -40,5 +40,6 @@ namespace libnish.Crypto
 			
 			
 		}
+		public rsa
 	}
 }
