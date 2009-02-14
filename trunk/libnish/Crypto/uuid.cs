@@ -25,7 +25,6 @@ namespace libnish.Crypto
 			return suuid;
 		}
 		public static bool verifyuuid(string auuid){
-			//TODO: actually impliment this
 			string[] split1;
 			string[] split2;
 			if (auuid.Length == getUUID().Length){
