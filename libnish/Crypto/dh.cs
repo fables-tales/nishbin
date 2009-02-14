@@ -23,7 +23,8 @@ namespace libnish.Crypto
 	 * person a: compute key = (k2^a) mod p
 	 * person b: compute key = (k1^b) mod p
 	 * 
-	 * due to the laws of exponentiation, (k2^a) mod p == (k1^b) mod p  
+	 * due to the laws of exponentiation, (k2^a) mod p == (k1^b) mod p
+	 * due to keys being base 10 integers, they can be hex decoded, causing increased compression and randomness  
 	 * */
 	
 	public class dh

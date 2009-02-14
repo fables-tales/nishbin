@@ -68,6 +68,7 @@
     <Compile Include="Crypto\uuid.cs" />
     <Compile Include="Crypto\Math\math.cs" />
     <Compile Include="Crypto\aes.cs" />
+    <Compile Include="Crypto\rsa.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
