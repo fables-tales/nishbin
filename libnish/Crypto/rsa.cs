@@ -40,6 +40,6 @@ namespace libnish.Crypto
 			
 			
 		}
-		public rsa
+		
 	}
 }
