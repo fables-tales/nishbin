@@ -12,10 +12,14 @@ namespace libnish.Crypto
 {
 	
 	
-	public class rsa
+	public class RSAKeyPair
 	{
 		private BigInteger p,q,n,e,d;
-		public rsa()
+		// rsa can't be used for both cryptography and signing
+		// these booleans determine which one it is being used for
+		private bool crypt;
+		private bool sign;
+		public RSAKeyPair()
 		{
 			p = Math.math.makePrime(4096);
 			q = Math.math.makePrime(4096);
@@ -23,7 +27,7 @@ namespace libnish.Crypto
 			BigInteger store = (p-1)*(q-1);
 			if (store.GCD(65537) == 1){
 				e = 65537;
-			} else{
+			} else {
 				int i = 65539;
 				while (store.GCD(i) != 1){
 					i += 2;
@@ -41,5 +45,41 @@ namespace libnish.Crypto
 			
 		}
 		
+		
+	}
+	public class RSAPublicKey{
+		private BigInteger e, n;
+		private bool cryptomode;
+		public RSAPublicKey(BigInteger ex, BigInteger pn,bool crypt){
+			e = ex;
+			n = pn;	
+			cryptomode = crypt;
+		}
+		public byte[] encrypt(byte[] message){
+			if (cryptomode == true){
+				BigInteger store = new BigInteger(0);
+				BigInteger[] chunks;
+				for (int i=message.Length;i>=0;i--){
+					store += message[i] << 8*i;
+				}
+				if (store > n){
+					chunks[0] = store % n;
+					
+				} else {
+					chunks[0] = store;
+				}
+				return null;
+			} else {
+				throw new InvalidOperationException("Unable to encrypt in signing mode");
+			}
+		}
+		public bool checksig(byte[] sig){
+			if (cryptomode == false){
+				return null;
+			} else {
+				throw new InvalidOperationException("Unable to perform signing operations in crypto mode"); 
+			}
+			
+		}
 	}
 }
