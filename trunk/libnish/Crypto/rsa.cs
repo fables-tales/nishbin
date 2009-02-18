@@ -47,39 +47,5 @@ namespace libnish.Crypto
 		
 		
 	}
-	public class RSAPublicKey{
-		private BigInteger e, n;
-		private bool cryptomode;
-		public RSAPublicKey(BigInteger ex, BigInteger pn,bool crypt){
-			e = ex;
-			n = pn;	
-			cryptomode = crypt;
-		}
-		public byte[] encrypt(byte[] message){
-			if (cryptomode == true){
-				BigInteger store = new BigInteger(0);
-				BigInteger[] chunks;
-				for (int i=message.Length;i>=0;i--){
-					store += message[i] << 8*i;
-				}
-				if (store > n){
-					chunks[0] = store % n;
-					
-				} else {
-					chunks[0] = store;
-				}
-				return null;
-			} else {
-				throw new InvalidOperationException("Unable to encrypt in signing mode");
-			}
-		}
-		public bool checksig(byte[] sig){
-			if (cryptomode == false){
-				return null;
-			} else {
-				throw new InvalidOperationException("Unable to perform signing operations in crypto mode"); 
-			}
-			
-		}
-	}
+	
 }
