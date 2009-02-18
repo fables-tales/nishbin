@@ -32,7 +32,7 @@ namespace libnish.Crypto.Math
 			}
 			return toit;
 		}
-		public static BigInterger modinvsolve(BigInteger a,BigInteger b){
+		public static BigInteger modinvsolve(BigInteger a,BigInteger b){
 			BigInteger x = new BigInteger(0);
 			BigInteger lastx = new BigInteger(1);
 			BigInteger y = new BigInteger(0);

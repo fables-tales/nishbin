@@ -27,6 +27,7 @@ namespace libnish.Crypto
 			BigInteger store = (p-1)*(q-1);
 			if (store.GCD(65537) == 1){
 				e = 65537;
+				
 			} else {
 				int i = 65539;
 				while (store.GCD(i) != 1){
