@@ -45,6 +45,7 @@ namespace libnish.Crypto
 			
 			
 		}
+		//VERY NOT READY FOR PRIMETIME
 		public BigInteger[] encrypt(byte[] input){
 			if (crypt == false && sign == false){
 				crypt = true;
@@ -61,6 +62,7 @@ namespace libnish.Crypto
 				while (index != 0){
 					buffer = 0;
 					shift = 0;
+					//this is bad, i'm going to add some bees.
 					while (buffer < n){
 						buffer += input[index] << (8*shift);
 						index -= 1;
@@ -80,7 +82,8 @@ namespace libnish.Crypto
 			}
 		}
 		//this might be a bigint later
-		public byte[] message(BigInteger[] cryptochunks){
+		public byte[] decrypt(BigInteger[] cryptochunks){
+			
 			return null;
 		}
 		
