@@ -17,8 +17,8 @@ namespace libnish.Crypto
 		private BigInteger p,q,n,e,d;
 		// rsa can't be used for both cryptography and signing
 		// these booleans determine which one it is being used for
-		private bool crypt;
-		private bool sign;
+		private bool crypt = false;
+		private bool sign = false;
 		public RSAKeyPair()
 		{
 			p = Math.math.makePrime(4096);
@@ -45,8 +45,46 @@ namespace libnish.Crypto
 			
 			
 		}
-		
+		public BigInteger[] encrypt(byte[] input){
+			if (crypt == false && sign == false){
+				crypt = true;
+			}
+			if (crypt == true){
+				BigInteger chunk,encchunk;
+				//i'll bet my bottom dollar that no message is larger than 8192*n
+				BigInteger[] chunks = new BigInteger[8192];
+				
+				BigInteger buffer = new BigInteger(0);
+				int index = input.Length;
+				int shift;
+				int count = 0;
+				while (index != 0){
+					buffer = 0;
+					shift = 0;
+					while (buffer < n){
+						buffer += input[index] << (8*shift);
+						index -= 1;
+						shift += 1;
+					}
+					chunk = buffer;
+					encchunk = chunk.ModPow(e,n);
+					chunks[count] = encchunk;
+					count += 1;
+				}
+				//hex decode this shit later?
+				return chunks;
+			
+			}
+			else{
+				throw new InvalidOperationException("you can't do encryption in signing mode");
+			}
+		}
+		//this might be a bigint later
+		public byte[] message(BigInteger[] cryptochunks){
+			return null;
+		}
 		
 	}
+	
 	
 }
