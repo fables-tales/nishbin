@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using Mono.Math;
 
 
@@ -21,10 +22,15 @@ namespace libnish.Crypto
 		private bool sign = false;
 		public RSAKeyPair()
 		{
-			p = Math.math.makePrime(4096);
-			q = Math.math.makePrime(4096);
+			System.Console.WriteLine("output");
+			q = Math.math.makePrime(2048);
+			System.Console.WriteLine("p done");
+			p = Math.math.makePrime(2048);
+			System.Console.WriteLine("q done");
 			n = p*q;
+			System.Console.WriteLine("n done");
 			BigInteger store = (p-1)*(q-1);
+			System.Console.WriteLine("store done");
 			if (store.GCD(65537) == 1){
 				e = 65537;
 			} else {
@@ -34,6 +40,7 @@ namespace libnish.Crypto
 				}
 				e = i;
 			}
+			System.Console.WriteLine("e done");
 			// this next bit is fucking complicated
 			// this is also the slowest possible method
 			// for doing this
@@ -41,7 +48,7 @@ namespace libnish.Crypto
 			// d.e = - q.store = 1
 			// solve using euler.
 			d = e.ModInverse(n);
-			
+			System.Console.WriteLine("d done");
 			
 		}
 		public RSAKeyPair(BigInteger p, BigInteger q, BigInteger e, BigInteger n, BigInteger d){
@@ -51,7 +58,13 @@ namespace libnish.Crypto
 			this.n = n;
 			this.d = d;
 		}
-		public void exportcryptoblob(){
+		public string[] exportcryptoblob(){
+			List<string> Blob = new List<string>();
+			
+			foreach (BigInteger b in new BigInteger[] { p, q, e, n, d })
+				Blob.Add(b.ToString());
+			
+			return Blob.ToArray();
 		}
 		public BigInteger encrypt(byte[] input){
 			if (crypt == false && sign == false){

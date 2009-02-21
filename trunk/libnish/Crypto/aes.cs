@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 using System.IO;
 
-namespace libnish
+namespace libnish.Crypto
 {
 	
 	
@@ -18,7 +18,7 @@ namespace libnish
 		private Rijndael handler;
         private ICryptoTransform dec;
         private ICryptoTransform enc;
-
+		private int offset = 0;
         public aes()
         {
             handler = RijndaelManaged.Create();
@@ -50,26 +50,22 @@ namespace libnish
 
 		public byte[] decrypt(byte[] ciphertext)
         {
-
-            // Use the provided byte[] buffer as a backing store to read out of
-			MemoryStream t = new MemoryStream(ciphertext);
-            // Stream automatically decrypts as we read data out of it.
-			CryptoStream Decryptor = new CryptoStream(t, dec, CryptoStreamMode.Read);
-            // Read data back out of the CryptoStream.
-            byte[] plaintext = new byte[Decryptor.Length];
-            Decryptor.Read(plaintext, 0, (int) Decryptor.Length); // if it doesn't fit in an int, its > 2gb anyway. deserves to crash...
-
-			return plaintext;
+			byte[] result = new byte[ciphertext.Length];
+            dec.TransformBlock(ciphertext,0,ciphertext.Length,result,0);
+			return result;
 		}
         
 		public byte[] encrypt(byte[] plaintext)
         {
-			MemoryStream t = new MemoryStream(plaintext);
-			CryptoStream Encryptor = new CryptoStream(t, enc, CryptoStreamMode.Read);
-            byte[] ciphertext = new byte[Encryptor.Length];
-            Encryptor.Read(ciphertext, 0, (int) Encryptor.Length);
-
-			return ciphertext;
+			byte[] result = new byte[plaintext.Length];
+			enc.TransformBlock(plaintext,0,plaintext.Length,result,0);
+			return result;
+		}
+		public byte[] key(){
+			return handler.Key;
+		}
+		public byte[] iv(){
+			return handler.IV;
 		}
 		
 	}
