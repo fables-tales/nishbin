@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EncryptedConnection.cs" />
     <Compile Include="Limits.cs" />
     <Compile Include="Crypto\dh.cs" />
     <Compile Include="Packets.cs" />
