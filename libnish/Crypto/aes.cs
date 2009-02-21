@@ -33,13 +33,19 @@ namespace libnish
         
 		public aes(byte[] pkey)
 		{
-            handler = RijndaelManaged.Create();
-            handler.GenerateIV();
-            handler.Key = pkey;
-			handler.Mode = CipherMode.CBC;
+			if (pkey.Length == 32){            
+				handler = RijndaelManaged.Create();
+				handler.GenerateIV();
+			
+				handler.Key = pkey;
+				handler.Mode = CipherMode.CBC;
 
-            dec = handler.CreateDecryptor();
-            enc = handler.CreateEncryptor();
+				dec = handler.CreateDecryptor();
+				enc = handler.CreateEncryptor();
+			} else{
+				throw new InvalidOperationException("key not long enough");
+			}
+			
 		}
 
 		public byte[] decrypt(byte[] ciphertext)
