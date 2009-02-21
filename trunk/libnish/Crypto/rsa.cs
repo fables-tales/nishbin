@@ -40,11 +40,19 @@ namespace libnish.Crypto
 			// de = 1 mod store
 			// d.e = - q.store = 1
 			// solve using euler.
-			d = Math.math.modinvsolve(e,store);
+			d = e.ModInverse(n);
 			
 			
 		}
-		//VERY NOT READY FOR PRIMETIME
+		public RSAKeyPair(BigInteger p, BigInteger q, BigInteger e, BigInteger n, BigInteger d){
+			this.p = p;
+			this.q = q;
+			this.e = e;
+			this.n = n;
+			this.d = d;
+		}
+		public void exportcryptoblob(){
+		}
 		public BigInteger encrypt(byte[] input){
 			if (crypt == false && sign == false){
 				crypt = true;
