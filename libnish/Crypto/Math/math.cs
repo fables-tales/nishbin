@@ -6,11 +6,11 @@
 
 using System;
 using Mono.Math;
+using System.Threading;
 
 
 namespace libnish.Crypto.Math
 {
-	
 	
 	public static class math
 	{
@@ -19,10 +19,13 @@ namespace libnish.Crypto.Math
 			return BigInteger.GenerateRandom(bits);
 		}
 		
+		
 		public static BigInteger makePrime(int bits){
 			//TODO: make this more bullet proof
 			return BigInteger.GeneratePseudoPrime(bits);
 		}
+	
+		
 		public static BigInteger toitient(BigInteger n){
 			BigInteger toit = 0;
 			for(BigInteger i = 0;i<n;i+=1){
