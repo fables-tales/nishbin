@@ -31,11 +31,11 @@ namespace libnish.Crypto
             enc = handler.CreateEncryptor();
         }
         
-		public aes(byte[] pkey)
+		public aes(byte[] pkey,byte[] iv)
 		{
 			if (pkey.Length == 32){            
 				handler = RijndaelManaged.Create();
-				handler.GenerateIV();
+				handler.IV = iv;
 			
 				handler.Key = pkey;
 				handler.Mode = CipherMode.CBC;

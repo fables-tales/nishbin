@@ -14,12 +14,12 @@ namespace libnish_tests
         [Description("Simple tests for MetaNotifyPacket.")]
         public void MetaNotifyPacketSimpleTest()
         {
-            MetaNotifyPacket mnp1 = new MetaNotifyPacket("F47AC10B-58CC-4372-A567-0E02B2C3D479");
+            MetaNotifyPacket mnp1 = new MetaNotifyPacket(libnish.Crypto.UUID.getUUID());
 
-            Assert.That(mnp1.ContainingUUID == "F47AC10B-58CC-4372-A567-0E02B2C3D479");
+            Assert.That(mnp1.ContainingUUID == libnish.Crypto.UUID.getUUID());
             Assert.That(mnp1.Type == PacketType.MetaNotify);
             
-            byte[] ExpectedUneArray = System.Text.Encoding.ASCII.GetBytes("META F47AC10B-58CC-4372-A567-0E02B2C3D479");
+            byte[] ExpectedUneArray = System.Text.Encoding.ASCII.GetBytes("META " + libnish.Crypto.UUID.getUUID());
             byte[] ActualUneArray = mnp1.ToUnencryptedByteArray();
 
             Assert.That(ActualUneArray.Length == ExpectedUneArray.Length);
@@ -32,11 +32,11 @@ namespace libnish_tests
         [Description("Simple tests for MetaNotifyPacket.")]
         public void MetaNotifyPacketSimpleTest2()
         {
-            MetaNotifyPacket mnp1 = new MetaNotifyPacket("F57AC10B-58CC-4372-A567-0E02B2C3D479");
+            MetaNotifyPacket mnp1 = new MetaNotifyPacket(libnish.Crypto.UUID.getUUID());
             
-            mnp1.ContainingUUID = "F47AC10B-58CC-4372-A567-0E02B2C3D479";
+            mnp1.ContainingUUID = libnish.Crypto.UUID.getUUID();
 
-            Assert.That(mnp1.ContainingUUID == "F47AC10B-58CC-4372-A567-0E02B2C3D479");
+            Assert.That(mnp1.ContainingUUID == libnish.Crypto.UUID.getUUID());
             Assert.That(mnp1.Type == PacketType.MetaNotify);
 
             byte[] ExpectedUneArray = System.Text.Encoding.ASCII.GetBytes("META F47AC10B-58CC-4372-A567-0E02B2C3D479");
