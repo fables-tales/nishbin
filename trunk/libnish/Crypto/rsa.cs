@@ -11,7 +11,7 @@ using Mono.Math;
 namespace libnish.Crypto
 {
 	
-	
+	//this probably shouldn't be used yet.
 	public class RSAKeyPair
 	{
 		private BigInteger p,q,n,e,d;
@@ -27,7 +27,6 @@ namespace libnish.Crypto
 			BigInteger store = (p-1)*(q-1);
 			if (store.GCD(65537) == 1){
 				e = 65537;
-				
 			} else {
 				int i = 65539;
 				while (store.GCD(i) != 1){
@@ -46,35 +45,27 @@ namespace libnish.Crypto
 			
 		}
 		//VERY NOT READY FOR PRIMETIME
-		public BigInteger[] encrypt(byte[] input){
+		public BigInteger encrypt(byte[] input){
 			if (crypt == false && sign == false){
 				crypt = true;
 			}
 			if (crypt == true){
-				BigInteger chunk,encchunk;
-				//i'll bet my bottom dollar that no message is larger than 8192*n
-				BigInteger[] chunks = new BigInteger[8192];
-				
-				BigInteger buffer = new BigInteger(0);
-				int index = input.Length;
-				int shift;
-				int count = 0;
-				while (index != 0){
-					buffer = 0;
-					shift = 0;
-					//this is bad, i'm going to add some bees.
-					while (buffer < n){
-						buffer += input[index] << (8*shift);
-						index -= 1;
-						shift += 1;
+				if (input.Length > 32){
+					throw new InvalidOperationException("you can't use aes with more than 256 bits");
+				} else {
+					BigInteger buffer = new BigInteger(0);
+					
+					for (int i = (input.Length-1);i>=0;i--){
+						buffer += input[i] << i*8;
 					}
-					chunk = buffer;
-					encchunk = chunk.ModPow(e,n);
-					chunks[count] = encchunk;
-					count += 1;
+					buffer = buffer << (8192 - 256);
+					buffer += (Math.math.getRandom(8192) >> 256);
+					buffer = buffer.ModPow(e,n);
+					return buffer;
 				}
+					
 				//hex decode this shit later?
-				return chunks;
+				
 			
 			}
 			else{
@@ -82,9 +73,27 @@ namespace libnish.Crypto
 			}
 		}
 		//this might be a bigint later
-		public byte[] decrypt(BigInteger[] cryptochunks){
-			
-			return null;
+		public byte[] decrypt(BigInteger cryptochunks){
+			if (crypt == false && sign == false){
+				crypt = true;
+			} 
+			if (crypt){
+				
+				BigInteger result = cryptochunks.ModPow(d,n);
+				result = result >> (8192-256);
+				byte[] decrypt = new byte[32];
+				int  counter = 0;
+				while (result != 0){
+					decrypt[counter] = (byte)(result % (1 << 8));
+					result = result >> 8;
+					counter += 1;
+				}
+				
+				return decrypt;	
+				
+			} else {
+				throw new InvalidOperationException("you can't do decryption in signing mode");
+			}
 		}
 		
 	}
