@@ -15,12 +15,9 @@ namespace libnish.Crypto
 		
 		 		
 		public static string  getUUID(){
-			Random RandomGenerator = new System.Random();
-			string seed1 = RandomGenerator.Next().ToString();
-			string seed2 = RandomGenerator.Next().ToString();
 			string suuid;
-			System.Guid t1 = new Guid(seed1);
-			System.Guid t2 = new Guid(seed2);
+			System.Guid t1 = System.Guid.NewGuid();
+			System.Guid t2 = System.Guid.NewGuid();
 			suuid = string.Format("%s-%s",t1.ToString(),t2.ToString());
 			return suuid;
 		}

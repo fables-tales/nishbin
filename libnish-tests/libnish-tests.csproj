@@ -44,14 +44,8 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="libnish, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\libnish\bin\Debug\libnish.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PacketsTest.cs" />
@@ -69,4 +63,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\libnish\libnish.csproj">
+      <Project>{B54E581A-147A-4336-8507-9796AA8AA8A0}</Project>
+      <Name>libnish</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

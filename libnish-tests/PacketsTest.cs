@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using libnish;
 
+// fix this
 namespace libnish_tests
 {
     [TestFixture]
