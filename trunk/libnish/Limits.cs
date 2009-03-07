@@ -5,7 +5,7 @@ namespace libnish
     public struct Limits
     {
         public int PushPacketSizeHardLimit;
-        
+
         //
         // More to come!
         //
@@ -21,5 +21,7 @@ namespace libnish
                 return l;
             }
         }
+
     }
+
 }
