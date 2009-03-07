@@ -22,25 +22,23 @@ namespace libnish.Crypto
         public aes()
         {
             handler = RijndaelManaged.Create();
-			handler.BlockSize = 256;
+			handler.Mode = CipherMode.CBC;
             handler.GenerateIV();
             // When no key is provided, we generate one.
             handler.GenerateKey();   
-			handler.Mode = CipherMode.CBC;
-
             dec = handler.CreateDecryptor();
             enc = handler.CreateEncryptor();
         }
         
 		public aes(byte[] pkey,byte[] iv)
 		{
-			if (pkey.Length == 32 && iv.Length == 32){            
+			if (pkey.Length == 32 && iv.Length == 16){            
 				handler = RijndaelManaged.Create();
-				handler.BlockSize = 256;
+				handler.Mode = CipherMode.CBC;
 				handler.IV = iv;
 			
 				handler.Key = pkey;
-				handler.Mode = CipherMode.CBC;
+				
 
 				dec = handler.CreateDecryptor();
 				enc = handler.CreateEncryptor();

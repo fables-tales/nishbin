@@ -56,7 +56,7 @@ namespace libnish.Crypto
 				toblob.AddRange(this.keychunks[i]);
 			}
 			this.key = hasher.ComputeHash(toblob.ToArray());
-			this.iv = iv;
+
 		}
 		public void generatekeyforthismessage(){
 			for(int i=0;i<this.message.Count;i++){
@@ -65,7 +65,7 @@ namespace libnish.Crypto
 				keychunks.Add(thischunk);
 			}
 			this.derivekey();
-			this.iv = Math.math.getRandom(256).GetBytes();
+			this.iv = Math.math.getRandom(128).GetBytes();
 		}
 		public void encrypt(){
 			aes aes = new aes(this.key,this.iv);
