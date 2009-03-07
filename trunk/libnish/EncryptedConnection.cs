@@ -106,12 +106,12 @@ namespace libnish
                 HandsShaken = true;
 
             // Get key. (first DH pass)
-            key = DoDH();
+            key = DoDH(false);
             // Get IV! (second DH pass)
-            iv = DoDH();
+            iv = DoDH(true);
         }
 
-        private BigInteger DoDH()
+        private BigInteger DoDH(bool IVNotKey)
         {
             /*
 	         * The actual dh protocol:
