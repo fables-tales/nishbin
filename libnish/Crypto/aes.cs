@@ -22,6 +22,7 @@ namespace libnish.Crypto
         public aes()
         {
             handler = RijndaelManaged.Create();
+			handler.BlockSize = 256;
             handler.GenerateIV();
             // When no key is provided, we generate one.
             handler.GenerateKey();   
@@ -33,8 +34,9 @@ namespace libnish.Crypto
         
 		public aes(byte[] pkey,byte[] iv)
 		{
-			if (pkey.Length == 32){            
+			if (pkey.Length == 32 && iv.Length == 32){            
 				handler = RijndaelManaged.Create();
+				handler.BlockSize = 256;
 				handler.IV = iv;
 			
 				handler.Key = pkey;
