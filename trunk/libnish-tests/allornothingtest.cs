@@ -22,11 +22,13 @@ namespace libnish_tests
 		[Test]
         [Description("bees")]
 		public void allornothing_a_barrel_roll(){
-			libnish.Crypto.allornothingtransform trans = new allornothingtransform(new byte[] {14,12,41,23});
+			libnish.Crypto.allornothingtransform trans = new allornothingtransform(libnish.Crypto.Math.math.getRandom(1024*1024).GetBytes());
 			trans.generatekeyforthismessage();
 			trans.encrypt();
 			trans.decrypt();
 			Assert.AreEqual(14,trans.message[0][0]);
+			Assert.Greater(trans.chunks.Count,1);
+			
 			
 			
 		}

@@ -25,19 +25,17 @@ namespace libnish_tests
 			}
 			dave[0] = 32;
 			dave[1] = 127;
-			byte[] dave2 = new byte[32];
-			for (int i = 0;i<32;i++){
-				dave2[i] = 0;
-			}
-			dave2[0] = 12;
-			dave2[1] = 47;
-			
 			byte[] enc = aesobj.encrypt(dave);
-			byte[] enc2 = aesobj.encrypt(dave2);
 			Console.WriteLine(dave.Length);
 			Console.WriteLine(enc.Length);
+			
 			byte[] dec = aesobj.decrypt(enc);
-			Console.WriteLine(dec);
+			for (int i =0;i<32;i++){
+				Console.WriteLine(enc[i]);
+				Console.WriteLine(dec[i]);
+			}
+			Console.WriteLine(dec[0]);
+			Console.WriteLine(dave[0]);
 			Assert.AreEqual(dave,dec);
 			
 		}
