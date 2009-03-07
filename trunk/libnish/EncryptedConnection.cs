@@ -62,10 +62,7 @@ namespace libnish
             // TODO: Ensure it doesn't timeout!!
             Handshake();
 
-            if (key == null || iv == null)
-                throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
-
-            aes = new aes(ComputeSHA256Hash(key.GetBytes()), ComputeSHA256Hash(iv.GetBytes()));
+            
         }
 
 
@@ -106,12 +103,17 @@ namespace libnish
                 HandsShaken = true;
 
             // Get key. (first DH pass)
-            key = DoDH(false);
+            byte[] key = DoDH(false);
             // Get IV! (second DH pass)
-            iv = DoDH(true);
+            byte[] iv = DoDH(true);
+
+			if (key == null || iv == null)
+				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
+
+			aes = new aes(ComputeSHA256Hash(key), ComputeSHA256Hash(iv));
         }
 
-        private BigInteger DoDH(bool IVNotKey)
+        private byte[] DoDH(bool IVNotKey)
         {
             /*
 	         * The actual dh protocol:
@@ -156,7 +158,25 @@ namespace libnish
                     // compute.
                     dh.computeKey();
 
-                    return dh.key;
+					if (IVNotKey)
+					{
+						byte[] kl = new byte[16];
+						byte[] kh = new byte[16];
+
+						kh = (dh.key >> 128).GetBytes();
+						kl = (dh.key % (BigInteger)(1 << 128)).GetBytes();
+
+						byte[] result = new byte[16];
+
+						for (int i = 0; i < result.Length; i++)
+						{
+							result[i] = (byte)(kl[i] ^ kh[i]);
+						}
+
+						return result;
+					}
+					else
+						return dh.key.GetBytes();
 
                 case false: // Person B!
                     // person b: accept g and p and respond with an acknowledgement (usually a hash of a + b)
@@ -175,21 +195,26 @@ namespace libnish
 
                     // compute.
                     dh.computeKey();
-				if (IVNotKey){
-					byte[] kl = new byte[16];
-					byte[] kh = new byte[16];
-					kh = (dh.key >> 128).GetBytes();
-					kl = (dh.key % (1 << 128));
-					byte[] result = new byte[16];
-					for (int i = 0;i<result.Length;i++){
-						result[i] = kl[i] ^ kh[i];
-					}
-					return result;
-					
-				} else{
 
-                    return dh.key;
-				}
+					if (IVNotKey)
+					{
+						byte[] kl = new byte[16];
+						byte[] kh = new byte[16];
+
+						kh = (dh.key >> 128).GetBytes();
+						kl = (dh.key % (BigInteger)(1 << 128)).GetBytes();
+
+						byte[] result = new byte[16];
+
+						for (int i = 0;i<result.Length;i++)
+						{
+							result[i] = (byte) (kl[i] ^ kh[i]);
+						}
+
+						return result;
+					}
+					else
+						return dh.key.GetBytes();
             }
 
             throw new NotSupportedException("FILE_NOT_FOUND");
