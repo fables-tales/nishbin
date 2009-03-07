@@ -22,8 +22,7 @@ namespace libnish_tests
 		[Test]
         [Description("bees")]
 		public void allornothing_a_barrel_roll(){
-			libnish.Crypto.allornothingtransform sample = new allornothingtransform(new byte[] {13,12,34,12});
-			Assert.AreEqual(sample.message.Length,1024);
+			
 			
 			
 		}
