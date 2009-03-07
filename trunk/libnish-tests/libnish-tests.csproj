@@ -53,6 +53,7 @@
     <Compile Include="AesTest.cs" />
     <Compile Include="RSATest.cs" />
     <Compile Include="UUIDTest.cs" />
+    <Compile Include="allornothingtest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
