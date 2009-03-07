@@ -43,6 +43,13 @@ namespace libnish.Crypto
 			this.generateKeyForThis();
 			
 		}
+		public allornothingtransform(byte[,] chunks, byte[] key,byte[] iv){
+			if (chunks.GetLength(1) == 1024 && chunks.GetLength(0) > 0){
+				this.chunks = chunks;
+				this.iv = iv;
+				this.key = key;
+			}
+		}
 		public void generateKeyForThis(){
 			this.key = new byte[this.chunks.GetLength(0)*256];
 			this.iv = new byte[this.chunks.GetLength(0)*256];
@@ -52,26 +59,26 @@ namespace libnish.Crypto
 			}
 		}
 		public void assembleKey(){
-			System.Security.Cryptography.SHA256 hasher = new System.Security.Cryptography.SHA256Managed();			
+			System.Security.Cryptography.SHA256 hasher = new System.Security.Cryptography.SHA256Managed();
 			this.hashkey = hasher.ComputeHash(this.key);
 		}
-		public byte[,] encrypt(){
-			byte[,] buffer = new byte[this.chunks.GetLength(0),this.chunks.GetLength(1)];
-			aes aeshandler = new aes(this.key,this.iv);
-			
-			
-			for(int i=0;i<buffer.GetLength(0);i++){
-					
-				buffer[i] = aeshandler.encrypt(this.chunks[i]);
-			}
-			return buffer;
-		}
+		
 		public byte[,] decrypt(){
 			byte[,] buffer = new byte[this.chunks.GetLength(0),this.chunks.GetLength(1)];
 			aes aeshandler = new aes(this.key,this.iv);
 			
 			for(int i=0;i<buffer.GetLength(0);i++){
 					buffer[i] = aeshandler.decrypt(this.chunks[i]);
+			}
+			return buffer;
+		}
+		public byte[,] encrypt(){
+			
+			byte[,] buffer = new byte[this.chunks.GetLength(0),this.chunks.GetLength(1)];
+			aes aeshandler = new aes(this.key,this.iv);
+			
+			for(int i=0;i<buffer.GetLength(0);i++){
+					buffer[i] = aeshandler.encrypt(this.chunks[i]);
 			}
 			return buffer;
 		}
