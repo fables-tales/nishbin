@@ -36,6 +36,9 @@ namespace libnish
 
             br = new BinaryReader(TcpClient.GetStream());
             bw = new BinaryWriter(TcpClient.GetStream());
+
+
+            Handshake();
         }
 
 
@@ -106,14 +109,9 @@ namespace libnish
                         if (bsHash[i] != hash[i])
                             throw new InvalidDataException("Person B failed to compute the hash. Computer error. Virus = very yes");
 
-                    // person a: generate a, take person b's a and store as b, compute k1 = (g^a) mod p
+                    // person a: generate a, compute k1 = (g^a) mod p
                     dh.generateA();
-                    // (send it so the person B can take our a)
-                    bw.Write(dh.a.GetBytes());
-                    // take their a and call it b.
-                    dh.b = new BigInteger(br.ReadBytes(32));
                     dh.computeK1();
-
 
                     // person a: send k1 to person b
                     bw.Write(MakeIt32Bytes(dh.k1.GetBytes()));
@@ -134,11 +132,8 @@ namespace libnish
                     hash = ComputeSHA256Hash(dh.g.GetBytes(), dh.p.GetBytes());
                     bw.Write(hash);
 
-                    // person b: generate a, take person a's a and store as b, compute k2 (our k1) = (g^a) mod p
+                    // person b: generate a, compute k2 (our k1) = (g^a) mod p
                     dh.generateA();
-                    // (send it so that A can take our a and call it b)
-                    bw.Write(dh.a.GetBytes());
-                    dh.b = new BigInteger(br.ReadBytes(32));
                     dh.computeK1();
 
                     // person b: send k2 (our k1) to person a
