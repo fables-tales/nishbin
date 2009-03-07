@@ -17,7 +17,7 @@ namespace libnish
 
         TcpClient TcpClient;
 
-        Limits Limits;
+        protected Limits Limits;
 
         bool OurEndNeedsToDoTheHandshake = false;
         bool HandsShaken = false;
@@ -30,7 +30,25 @@ namespace libnish
 
         aes aes;
 
-        private EncryptedConnection(TcpClient LiveConnection, string IPAddress, int Port, Limits Limits, bool Outward)
+        public int Available
+        {
+            get
+            {
+                return TcpClient.Available;
+            }
+        }
+
+        public bool Connected
+        {
+            get
+            {
+                return TcpClient.Connected;
+            }
+        }
+
+        public abstract void Poll();
+
+        protected EncryptedConnection(TcpClient LiveConnection, string IPAddress, int Port, Limits Limits, bool Outward)
         {
             TcpClient = LiveConnection;
             IP = IPAddress;
@@ -52,7 +70,7 @@ namespace libnish
 
 
 
-        private void AwaitResponse(byte NumBytesResponseRequired, int TimeoutMs)
+        protected void AwaitResponse(byte NumBytesResponseRequired, int TimeoutMs)
         {
             DateTime startTime = DateTime.UtcNow;
 
@@ -66,14 +84,14 @@ namespace libnish
             }
         }
 
-        private void EncryptAndSend(byte[] data)
+        protected void EncryptAndSend(byte[] data)
         {
             bw.Write(aes.encrypt(data));
         }
 
-        private void ReceiveAndDecrypt(byte[] data)
+        protected byte[] ReceiveAndDecrypt(int bytes)
         {
-            data = br.ReadBytes(data.Length);
+            return aes.decrypt(br.ReadBytes(bytes));
         }
 
         private void Handshake()
@@ -172,7 +190,6 @@ namespace libnish
                 output.Add(0);
 
             output.AddRange(LessThan32Bytes);
-
             return output.ToArray();
         }
 
