@@ -175,8 +175,21 @@ namespace libnish
 
                     // compute.
                     dh.computeKey();
+				if (IVNotKey){
+					byte[] kl = new byte[16];
+					byte[] kh = new byte[16];
+					kh = (dh.key >> 128).GetBytes();
+					kl = (dh.key % (1 << 128));
+					byte[] result = new byte[16];
+					for (int i = 0;i<result.Length;i++){
+						result[i] = kl[i] ^ kh[i];
+					}
+					return result;
+					
+				} else{
 
                     return dh.key;
+				}
             }
 
             throw new NotSupportedException("FILE_NOT_FOUND");
