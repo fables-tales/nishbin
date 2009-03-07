@@ -3,7 +3,7 @@
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
 //
-
+/*
 using System;
 
 using System.Collections.Generic;
@@ -31,3 +31,4 @@ namespace libnish_tests
 		}
 	}
 }
+*/

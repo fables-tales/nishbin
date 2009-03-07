@@ -58,7 +58,7 @@ namespace libnish.Crypto
 			this.key = hasher.ComputeHash(toblob.ToArray());
 			this.iv = iv;
 		}
-		public void keyforthismessage(){
+		public void generatekeyforthismessage(){
 			for(int i=0;i<this.message.Count;i++){
 				byte[] thischunk = new byte[32];
 				thischunk = Math.math.getRandom(256).GetBytes();
