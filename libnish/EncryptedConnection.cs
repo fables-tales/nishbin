@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 using libnish.Crypto;
 using Mono.Math;
+using System.Net.Sockets;
 
 namespace libnish
 {
@@ -24,7 +25,10 @@ namespace libnish
         BinaryReader br;
         BinaryWriter bw;
 
-        BigInteger key;
+        BigInteger key = null;
+        BigInteger iv = null;
+
+        aes aes;
 
         private EncryptedConnection(TcpClient LiveConnection, string IPAddress, int Port, Limits Limits, bool Outward)
         {
@@ -37,8 +41,13 @@ namespace libnish
             br = new BinaryReader(TcpClient.GetStream());
             bw = new BinaryWriter(TcpClient.GetStream());
 
-
+            // TODO: Ensure it doesn't timeout!!
             Handshake();
+
+            if (key == null || iv == null)
+                throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
+
+            aes = new aes(ComputeSHA256Hash(key.GetBytes()), ComputeSHA256Hash(iv.GetBytes()));
         }
 
 
@@ -59,12 +68,12 @@ namespace libnish
 
         private void EncryptAndSend(byte[] data)
         {
-
+            bw.Write(aes.encrypt(data));
         }
 
         private void ReceiveAndDecrypt(byte[] data)
         {
-
+            data = br.ReadBytes(data.Length);
         }
 
         private void Handshake()
@@ -78,6 +87,14 @@ namespace libnish
             else
                 HandsShaken = true;
 
+            // Get key. (first DH pass)
+            key = DoDH();
+            // Get IV! (second DH pass)
+            iv = DoDH();
+        }
+
+        private BigInteger DoDH()
+        {
             /*
 	         * The actual dh protocol:
 	         * person a: generate g and p, send to person b
@@ -121,9 +138,7 @@ namespace libnish
                     // compute.
                     dh.computeKey();
 
-                    key = dh.key;
-
-                    break;
+                    return dh.key;
 
                 case false: // Person B!
                     // person b: accept g and p and respond with an acknowledgement (usually a hash of a + b)
@@ -143,10 +158,10 @@ namespace libnish
                     // compute.
                     dh.computeKey();
 
-                    key = dh.key;
-                    
-                    break;
+                    return dh.key;
             }
+
+            throw new NotSupportedException("FILE_NOT_FOUND");
         }
 
         private byte[] MakeIt32Bytes(byte[] LessThan32Bytes)
