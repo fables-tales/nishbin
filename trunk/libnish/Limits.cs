@@ -10,7 +10,7 @@ namespace libnish
         // More to come!
         //
 
-        public Limits Default
+        public static Limits Default
         {
             get
             {
