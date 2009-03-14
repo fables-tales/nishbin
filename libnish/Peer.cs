@@ -91,7 +91,7 @@ namespace libnish
                     byte[] somebytes = ReceiveAndDecrypt(Available);
                     for (int i = 0; i < somebytes.Length; i++)
 					{
-						Console.WriteLine(i.ToString() + ": " + (somebytes[i]).ToString());
+						
                         RecvBuffer.Enqueue(somebytes[i]);
 						
 					}

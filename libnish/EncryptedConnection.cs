@@ -108,7 +108,7 @@ namespace libnish
 
                 Array.Resize(ref data, (OriginalLength + (16 - (OriginalLength % 16))));
 
-                Console.WriteLine((byte)'\n');
+                
 
                 for (int i = OriginalLength; i < data.Length; i++)
                     data[i] = 10;  // '\n'
@@ -134,18 +134,16 @@ namespace libnish
                 HandsShaken = true;
 
             // Get key. (first DH pass)
-            Console.WriteLine("--FIRST PASS--");
+            
             byte[] key = DoDH(false);
             // Get IV! (second DH pass)
-            Console.WriteLine("--SECOND PASS--");
+            
             byte[] iv = DoDH(true);
 
 			if (key == null || iv == null)
 				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
 
-            Console.WriteLine("\n");
-            Console.WriteLine("KEY:: " + new BigInteger(key));
-            Console.WriteLine("IV:: " + new BigInteger(iv));
+            
 
 			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
         }
@@ -172,8 +170,8 @@ namespace libnish
                 case true: // Person A!
                     // person a: generate g and p, send to person b
                     dh.generateGP();
-			    Console.Out.WriteLine(dh.p);
-				Console.Out.WriteLine(dh.g);
+			    
+				
                     bw.Write(dh.g.GetBytes());
                     bw.Write(dh.p.GetBytes());
                     
@@ -206,8 +204,7 @@ namespace libnish
                     // person b: accept g and p and respond with an acknowledgement (usually a hash of a + b)
                     dh.g = new BigInteger(br.ReadBytes(32));
                     dh.p = new BigInteger(br.ReadBytes(32));
-				Console.Out.WriteLine(dh.p);
-				Console.Out.WriteLine(dh.g);
+				
                     hash = ComputeSHA256Hash(dh.g.GetBytes(), dh.p.GetBytes());
                     bw.Write(hash);
 
