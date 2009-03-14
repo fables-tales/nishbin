@@ -207,8 +207,8 @@ namespace libnish
 						byte[] kl = new byte[16];
 						byte[] kh = new byte[16];
 
-						kh = (dh.key >> 128).GetBytes();
-						kl = (dh.key % (BigInteger)(1 << 128)).GetBytes();
+						kh = MakeIt16Bytes((dh.key >> 128).GetBytes());
+						kl = MakeIt16Bytes((dh.key % (BigInteger)(1 << 128)).GetBytes());
 
 						byte[] result = new byte[16];
 
@@ -234,6 +234,17 @@ namespace libnish
                 output.Add(0);
 
             output.AddRange(LessThan32Bytes);
+            return output.ToArray();
+        }
+
+        private byte[] MakeIt16Bytes(byte[] LessThan16Bytes)
+        {
+            List<byte> output = new List<byte>();
+
+            for (int i = 16 - LessThan16Bytes.Length; i > 0; i++)
+                output.Add(0);
+
+            output.AddRange(LessThan16Bytes);
             return output.ToArray();
         }
 
