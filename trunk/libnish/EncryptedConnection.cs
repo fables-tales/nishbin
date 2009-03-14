@@ -228,24 +228,27 @@ namespace libnish
 
         private byte[] MakeIt32Bytes(byte[] LessThan32Bytes)
         {
-            List<byte> output = new List<byte>();
+            //List<byte> output = new List<byte>();
+            byte[] output = new byte[32];
 
-            for (int i = 32 - LessThan32Bytes.Length; i < 32; i++)
-                output.Add(0);
+            for (int i = 0; i < 32; i++)
+                output[i] = 0;
+            for (int i = 0; i < LessThan32Bytes.Length; i++)
+                output[i + (32 - LessThan32Bytes.Length)] = LessThan32Bytes[i];
 
-            output.AddRange(LessThan32Bytes);
-            return output.ToArray();
+            return output;
         }
 
         private byte[] MakeIt16Bytes(byte[] LessThan16Bytes)
         {
-            List<byte> output = new List<byte>();
+            byte[] output = new byte[16];
 
-            for (int i = 16 - LessThan16Bytes.Length; i < 16; i++)
-                output.Add(0);
+            for (int i = 0; i < 16; i++)
+                output[i] = 0;
+            for (int i = 0; i < LessThan16Bytes.Length; i++)
+                output[i + (16 - LessThan16Bytes.Length)] = LessThan16Bytes[i];
 
-            output.AddRange(LessThan16Bytes);
-            return output.ToArray();
+            return output;
         }
 
         private byte[] ComputeSHA256Hash(byte[] firstHalfOfInput, byte[] secondHalfOfInput)
