@@ -61,22 +61,14 @@ namespace libnish.Crypto
             // FIXME: Ugly. use stackalloc keyword?
             byte[] temp = new byte[truncatedCiphertext.Length + 16];
             byte[] result = new byte[truncatedCiphertext.Length + 16];
-
-            Console.WriteLine("Dec's copy...");
             Array.Copy(truncatedCiphertext, temp, truncatedCiphertext.Length);
-
-            Console.WriteLine("Copy finished.");
-
-            Console.WriteLine("Decrypting...");
             dec.TransformBlock(temp, 0, truncatedCiphertext.Length + 16, result, 0);
 
             if (dontTruncate)
                 return result;
             else
             {
-                Console.WriteLine("Dec's resize...");
                 Array.Resize(ref result, result.Length - 16);
-                Console.WriteLine("Dec finished.");
                 return result;
             }
 		}
