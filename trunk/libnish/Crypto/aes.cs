@@ -51,14 +51,15 @@ namespace libnish.Crypto
 		public byte[] decrypt(byte[] ciphertext)
         {
 			byte[] result = new byte[ciphertext.Length];
-            dec.TransformBlock(ciphertext,0,ciphertext.Length,result,0);
+			
+			dec.TransformBlock(ciphertext,0,ciphertext.Length+16,result,0);
 			return result;
 		}
         
 		public byte[] encrypt(byte[] plaintext)
         {
 			byte[] result = new byte[plaintext.Length];
-			enc.TransformBlock(plaintext,0,plaintext.Length,result,0);
+			enc.TransformBlock(plaintext,0,plaintext.Length+16,result,0);
 			return result;
 		}
 
