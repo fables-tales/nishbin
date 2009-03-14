@@ -64,6 +64,7 @@ namespace libnish
                     return new MetaNotifyPacket(Contents);
 
                 default:
+                    // FIXME: Proliferate, don't throw an exception!!
                     throw new Exception("Unrecognised packet type '" + System.Text.Encoding.ASCII.GetString(Contents, 0, 4) + "'.");
             }
         }
