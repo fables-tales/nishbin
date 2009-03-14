@@ -50,14 +50,7 @@ namespace libnish.Crypto
 		
 		//a is the private exponent of person a, k1 =  (g^a) mod p is calculated and sent to person b
 		public void generateA(){
-			BigInteger t = Math.math.makePrime(256);
-			
-			while ((g*p) < (t)){
-				t = Math.math.makePrime(256);
-				
-			}
-			a = t;
-			
+			a = Math.math.makePrime(256);
 		}
 		//this calculates k1
 		public void computeK1(){
