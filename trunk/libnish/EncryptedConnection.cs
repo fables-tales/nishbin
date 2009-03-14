@@ -112,6 +112,10 @@ namespace libnish
 			if (key == null || iv == null)
 				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
 
+            Console.WriteLine("\n");
+            Console.WriteLine("KEY:: " + new BigInteger(key));
+            Console.WriteLine("IV:: " + new BigInteger(iv));
+
 			aes = new aes(ComputeSHA256Hash(key), ComputeSHA256Hash(iv));
         }
 
@@ -225,6 +229,8 @@ namespace libnish
 
             throw new NotSupportedException("FILE_NOT_FOUND");
         }
+
+
 
         private byte[] MakeIt32Bytes(byte[] LessThan32Bytes)
         {
