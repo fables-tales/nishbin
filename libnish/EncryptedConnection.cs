@@ -116,7 +116,7 @@ namespace libnish
             Console.WriteLine("KEY:: " + new BigInteger(key));
             Console.WriteLine("IV:: " + new BigInteger(iv));
 
-			aes = new aes(ComputeSHA256Hash(key), ComputeSHA256Hash(iv));
+			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
         }
 
         private byte[] DoDH(bool IVNotKey)
@@ -167,22 +167,7 @@ namespace libnish
                     dh.computeKey();
 
 					if (IVNotKey)
-					{
-						byte[] kl = new byte[16];
-						byte[] kh = new byte[16];
-
-						kh = MakeIt16Bytes((dh.key >> 128).GetBytes());
-						kl = MakeIt16Bytes((dh.key % (BigInteger)(1 << 128)).GetBytes());
-
-						byte[] result = new byte[16];
-
-						for (int i = 0; i < result.Length; i++)
-						{
-							result[i] = (byte)(kl[i] ^ kh[i]);
-						}
-
-						return result;
-					}
+                        return Convert32To16(dh.key);
 					else
 						return dh.key.GetBytes();
 
@@ -208,7 +193,10 @@ namespace libnish
 
 					if (IVNotKey)
 					{
-						byte[] kl = new byte[16];
+                        return Convert32To16(dh.key);
+
+                        // TODO: If you can read this, delete the below. keeping temporarily for safekeeping...
+						/*byte[] kl = new byte[16];
 						byte[] kh = new byte[16];
 
 						kh = MakeIt16Bytes((dh.key >> 128).GetBytes());
@@ -221,13 +209,31 @@ namespace libnish
 							result[i] = (byte) (kl[i] ^ kh[i]);
 						}
 
-						return result;
+						return result;*/
 					}
 					else
 						return dh.key.GetBytes();
             }
 
             throw new NotSupportedException("FILE_NOT_FOUND");
+        }
+
+        private byte[] Convert32To16(BigInteger thirtytwo)
+        {
+            byte[] kl = new byte[16];
+            byte[] kh = new byte[16];
+
+            kh = MakeIt16Bytes((thirtytwo >> 128).GetBytes());
+            kl = MakeIt16Bytes((thirtytwo % (BigInteger)(1 << 128)).GetBytes());
+
+            byte[] result = new byte[16];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = (byte)(kl[i] ^ kh[i]);
+            }
+
+            return result;
         }
 
 
