@@ -167,8 +167,8 @@ namespace libnish
 						byte[] kl = new byte[16];
 						byte[] kh = new byte[16];
 
-						kh = (dh.key >> 128).GetBytes();
-						kl = (dh.key % (BigInteger)(1 << 128)).GetBytes();
+						kh = MakeIt16Bytes((dh.key >> 128).GetBytes());
+						kl = MakeIt16Bytes((dh.key % (BigInteger)(1 << 128)).GetBytes());
 
 						byte[] result = new byte[16];
 
