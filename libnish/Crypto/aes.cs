@@ -38,33 +38,66 @@ namespace libnish.Crypto
 				handler.IV = iv;
 			
 				handler.Key = pkey;
-				
 
 				dec = handler.CreateDecryptor();
 				enc = handler.CreateEncryptor();
 				byte[] win = new byte[16];
 				byte[] die = new byte[16];
-				enc.TransformBlock(win,0,16,die,0);
-				dec.TransformBlock(die,0,16,win,0);
+				
 			} else{
 				throw new InvalidOperationException("key not long enough");
 			}
 			
 		}
 
-		public byte[] decrypt(byte[] ciphertext)
+        public byte[] decrypt(byte[] truncatedCiphertext)
         {
-			byte[] result = new byte[ciphertext.Length];
-			
-			dec.TransformBlock(ciphertext,0,ciphertext.Length,result,0);
-			return result;
+            return decrypt(truncatedCiphertext, false);
+        }
+
+        // Here be dragons!  note ciphertext is ref
+		public byte[] decrypt(byte[] truncatedCiphertext, bool dontTruncate)
+        {
+            // FIXME: Ugly. use stackalloc keyword?
+            byte[] temp = new byte[truncatedCiphertext.Length + 16];
+            byte[] result = new byte[truncatedCiphertext.Length + 16];
+
+            Console.WriteLine("Dec's copy...");
+            Array.Copy(truncatedCiphertext, temp, truncatedCiphertext.Length);
+
+            Console.WriteLine("Copy finished.");
+
+            Console.WriteLine("Decrypting...");
+            dec.TransformBlock(temp, 0, truncatedCiphertext.Length + 16, result, 0);
+
+            if (dontTruncate)
+                return result;
+            else
+            {
+                Console.WriteLine("Dec's resize...");
+                Array.Resize(ref result, result.Length - 16);
+                Console.WriteLine("Dec finished.");
+                return result;
+            }
 		}
-        
-		public byte[] encrypt(byte[] plaintext)
+
+        public byte[] encrypt(byte[] plaintext)
         {
-			byte[] result = new byte[plaintext.Length];
+            return encrypt(plaintext, false);
+        }
+
+		public byte[] encrypt(byte[] plaintext, bool dontTruncate)
+        {
+			byte[] result = new byte[plaintext.Length+16];
 			enc.TransformBlock(plaintext,0,plaintext.Length,result,0);
-			return result;
+
+            if (dontTruncate)
+                return result;
+            else
+            {
+                Array.Resize(ref result, result.Length - 16);
+                return result;
+            }
 		}
 
 		public byte[] key(){

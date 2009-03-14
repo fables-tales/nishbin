@@ -108,8 +108,10 @@ namespace libnish
 
                 Array.Resize(ref data, (OriginalLength + (16 - (OriginalLength % 16))));
 
+                Console.WriteLine((byte)'\n');
+
                 for (int i = OriginalLength; i < data.Length; i++)
-                    data[i] = (byte) '\n';
+                    data[i] = 10;  // '\n'
             }
 
             bw.Write(aes.encrypt(data));
