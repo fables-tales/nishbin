@@ -230,7 +230,7 @@ namespace libnish
         {
             List<byte> output = new List<byte>();
 
-            for (int i = 32 - LessThan32Bytes.Length; i > 0; i++)
+            for (int i = 32 - LessThan32Bytes.Length; i < 32; i++)
                 output.Add(0);
 
             output.AddRange(LessThan32Bytes);
@@ -241,7 +241,7 @@ namespace libnish
         {
             List<byte> output = new List<byte>();
 
-            for (int i = 16 - LessThan16Bytes.Length; i > 0; i++)
+            for (int i = 16 - LessThan16Bytes.Length; i < 16; i++)
                 output.Add(0);
 
             output.AddRange(LessThan16Bytes);
