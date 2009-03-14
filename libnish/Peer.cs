@@ -90,7 +90,11 @@ namespace libnish
                     // FIXME: might take us too long to react to being pumped with loads of junk data > limit setting. (not til next if statement!)
                     byte[] somebytes = ReceiveAndDecrypt(Available);
                     for (int i = 0; i < somebytes.Length; i++)
+					{
+						Console.WriteLine(i.ToString() + ": " + (somebytes[i]).ToString());
                         RecvBuffer.Enqueue(somebytes[i]);
+						
+					}
                 }
 
                 if (RecvBuffer.Contains((byte)'\n'))
