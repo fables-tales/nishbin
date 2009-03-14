@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using libnish;
 using System.Net.Sockets;
@@ -15,7 +14,7 @@ namespace TestPacketSender
 			Console.WriteLine("Test packet sender.");
 			Console.WriteLine("-----");
 
-			Console.WriteLine();
+			Console.WriteLine("\n");
 
 			Console.Write("Remote ip, port in [ip]:[port] format: ");
 			string ipAndPort = Console.ReadLine();
