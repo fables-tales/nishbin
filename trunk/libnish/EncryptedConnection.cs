@@ -103,8 +103,10 @@ namespace libnish
                 HandsShaken = true;
 
             // Get key. (first DH pass)
+            Console.WriteLine("--FIRST PASS--");
             byte[] key = DoDH(false);
             // Get IV! (second DH pass)
+            Console.WriteLine("--SECOND PASS--");
             byte[] iv = DoDH(true);
 
 			if (key == null || iv == null)
