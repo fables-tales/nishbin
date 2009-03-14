@@ -135,6 +135,8 @@ namespace libnish
                 case true: // Person A!
                     // person a: generate g and p, send to person b
                     dh.generateGP();
+			    Console.Out.WriteLine(dh.p);
+				Console.Out.WriteLine(dh.g);
                     bw.Write(dh.g.GetBytes());
                     bw.Write(dh.p.GetBytes());
                     
@@ -182,6 +184,8 @@ namespace libnish
                     // person b: accept g and p and respond with an acknowledgement (usually a hash of a + b)
                     dh.g = new BigInteger(br.ReadBytes(32));
                     dh.p = new BigInteger(br.ReadBytes(32));
+				Console.Out.WriteLine(dh.p);
+				Console.Out.WriteLine(dh.g);
                     hash = ComputeSHA256Hash(dh.g.GetBytes(), dh.p.GetBytes());
                     bw.Write(hash);
 

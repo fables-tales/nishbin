@@ -61,6 +61,7 @@ namespace libnish.Crypto
 		//this calculates k1
 		public void computeK1(){
 			k1 = g.ModPow(a,p);
+			
 		}
 		//this recieves k2 from a remote user and sets it
 		public void setk2(BigInteger B){
