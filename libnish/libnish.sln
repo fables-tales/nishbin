@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libnish", "libnish.csproj", "{B54E581A-147A-4336-8507-9796AA8AA8A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPacketReceiver", "..\TestPacketReceiver\TestPacketReceiver.csproj", "f7750f7c-e5f0-4385-80f4-3de5403ad12b"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPacketReceiver", "..\TestPacketReceiver\TestPacketReceiver.csproj", "{4934A0F4-4D1C-4B6D-8C10-9F4BC88B3659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPacketSender", "..\TestPacketSender\TestPacketSender.csproj", "33d6c69e-d540-4650-97ad-18d242ed397a"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPacketSender", "..\TestPacketSender\TestPacketSender.csproj", "{D0E9F411-5594-4DE2-9A3F-358700DF0F06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,18 +17,14 @@ Global
 		{B54E581A-147A-4336-8507-9796AA8AA8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B54E581A-147A-4336-8507-9796AA8AA8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B54E581A-147A-4336-8507-9796AA8AA8A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		33d6c69e-d540-4650-97ad-18d242ed397a.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		33d6c69e-d540-4650-97ad-18d242ed397a.Debug|Any CPU.Build.0 = Debug|Any CPU
-		33d6c69e-d540-4650-97ad-18d242ed397a.Release|Any CPU.ActiveCfg = Release|Any CPU
-		33d6c69e-d540-4650-97ad-18d242ed397a.Release|Any CPU.Build.0 = Release|Any CPU
-		f7750f7c-e5f0-4385-80f4-3de5403ad12b.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		f7750f7c-e5f0-4385-80f4-3de5403ad12b.Debug|Any CPU.Build.0 = Debug|Any CPU
-		f7750f7c-e5f0-4385-80f4-3de5403ad12b.Release|Any CPU.ActiveCfg = Release|Any CPU
-		f7750f7c-e5f0-4385-80f4-3de5403ad12b.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+		{4934A0F4-4D1C-4B6D-8C10-9F4BC88B3659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4934A0F4-4D1C-4B6D-8C10-9F4BC88B3659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E9F411-5594-4DE2-9A3F-358700DF0F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E9F411-5594-4DE2-9A3F-358700DF0F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

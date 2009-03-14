@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using libnish;
 using System.Net.Sockets;
@@ -18,9 +17,9 @@ namespace TestPacketReceiver
 
 			Console.WriteLine();
 
-			Console.Write("Listening on port 9001.");
+			Console.Write("Listening on port 23132.");
 
-			TcpListener tListener = new TcpListener(9001);
+			TcpListener tListener = new TcpListener(23132);
 			tListener.Start();
 
 			while (!tListener.Pending())
@@ -33,7 +32,7 @@ namespace TestPacketReceiver
 
 			Console.WriteLine("Got one! Handshaking...");
 
-			Peer p = new Peer(tcIncoming, "DONTCARE", 0, Limits.Default, true);
+			Peer p = new Peer(tcIncoming, "DONTCARE", 0, Limits.Default, false);
 
 			while (!p.PacketAvailable)
 			{
