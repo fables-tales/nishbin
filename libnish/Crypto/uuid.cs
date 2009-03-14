@@ -18,7 +18,7 @@ namespace libnish.Crypto
 			string suuid;
 			System.Guid t1 = System.Guid.NewGuid();
 			System.Guid t2 = System.Guid.NewGuid();
-			suuid = string.Format("%s-%s",t1.ToString(),t2.ToString());
+			suuid = t1.ToString()+"-"+t2.ToString();
 			return suuid;
 		}
 		public static bool verifyuuid(string auuid){
