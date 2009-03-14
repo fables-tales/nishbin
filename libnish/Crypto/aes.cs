@@ -61,6 +61,7 @@ namespace libnish.Crypto
 			enc.TransformBlock(plaintext,0,plaintext.Length,result,0);
 			return result;
 		}
+
 		public byte[] key(){
 			return handler.Key;
 		}

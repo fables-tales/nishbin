@@ -81,8 +81,37 @@ namespace libnish
             }
         }
 
+        /// <summary>
+        /// Encrypts and sends the appropriate data.
+        /// </summary>
+        /// <param name="data">The data to encrypt and send. (If not a multiple of 16 bytes, it will be copied into another array and padded.)</param>
+        /// <remarks>If it is not a multiple of 16 bytes, it will be copied into another array and padded with \ns. Pass in multiples of 16 bytes!!</remarks>
         protected void EncryptAndSend(byte[] data)
         {
+            byte[] copiedData = data;
+
+            if (data.Length % 16 != 0)
+                Array.Copy(data, copiedData, data.Length);
+
+            EncryptAndSendRefQuick(ref copiedData);
+        }
+
+        /// <summary>
+        /// EncryptAndSendRefQuick -- does things quickly liek.
+        /// </summary>
+        /// <param name="data"></param>
+        protected void EncryptAndSendRefQuick(ref byte[] data)
+        {
+            if (data.Length % 16 != 0)
+            {
+                int OriginalLength = data.Length;
+
+                Array.Resize(ref data, (OriginalLength + (16 - (OriginalLength % 16))));
+
+                for (int i = OriginalLength; i < data.Length; i++)
+                    data[i] = (byte) '\n';
+            }
+
             bw.Write(aes.encrypt(data));
         }
 

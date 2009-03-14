@@ -61,7 +61,12 @@ namespace libnish
                         byte b = RecvBuffer.Dequeue();
 
                         if (b == (byte)'\n')
+                        {
+                            while (RecvBuffer.Count > 0 && RecvBuffer.Peek() == (byte)'\n')
+                                RecvBuffer.Dequeue();
+
                             break;
+                        }
                         else
                             packbuff.Add(b);
                     }
