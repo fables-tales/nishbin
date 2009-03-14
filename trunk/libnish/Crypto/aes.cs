@@ -42,6 +42,10 @@ namespace libnish.Crypto
 
 				dec = handler.CreateDecryptor();
 				enc = handler.CreateEncryptor();
+				byte[] win = new byte[16];
+				byte[] die = new byte[16];
+				enc.TransformBlock(win,0,16,die,0);
+				dec.TransformBlock(die,0,16,win,0);
 			} else{
 				throw new InvalidOperationException("key not long enough");
 			}
@@ -52,14 +56,14 @@ namespace libnish.Crypto
         {
 			byte[] result = new byte[ciphertext.Length];
 			
-			dec.TransformBlock(ciphertext,0,ciphertext.Length+16,result,0);
+			dec.TransformBlock(ciphertext,0,ciphertext.Length,result,0);
 			return result;
 		}
         
 		public byte[] encrypt(byte[] plaintext)
         {
 			byte[] result = new byte[plaintext.Length];
-			enc.TransformBlock(plaintext,0,plaintext.Length+16,result,0);
+			enc.TransformBlock(plaintext,0,plaintext.Length,result,0);
 			return result;
 		}
 
