@@ -22,12 +22,27 @@ namespace libnish_tests
 		[Test]
         [Description("bees")]
 		public void allornothing_a_barrel_roll(){
-			libnish.Crypto.allornothingtransform trans = new allornothingtransform(libnish.Crypto.Math.math.getRandom(1024*1024).GetBytes());
+            byte[] input = new byte[1024];
+            new Random().NextBytes(input);
+			libnish.Crypto.allornothingtransform trans = new allornothingtransform(input);
+            Console.WriteLine("BEFORE:");
+            foreach (byte b in input)
+            {
+                Console.Write(b + ", ");
+            }
 			trans.generatekeyforthismessage();
 			trans.encrypt();
 			trans.decrypt();
-			Assert.AreEqual(14,trans.message[0][0]);
-			Assert.Greater(trans.chunks.Count,1);
+            Console.WriteLine("\ntrans.message contains " + trans.message.Count + " byte[] arrays.");
+            Console.WriteLine("AFTER:");
+            foreach (byte c in trans.message[0])
+                Console.Write(c + ", ");
+            Console.WriteLine();
+            Console.WriteLine("Before length: " + input.Length.ToString());
+            Console.WriteLine("After length: " + trans.message[0].Length.ToString());
+			Assert.AreEqual(input, trans.message[0]);
+			//Assert.Greater(trans.chunks.Count,1);
+            Assert.AreEqual(1, trans.chunks.Count);
 			
 			
 			
