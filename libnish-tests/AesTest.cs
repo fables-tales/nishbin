@@ -30,7 +30,6 @@ namespace libnish_tests
 			//Console.WriteLine(enc.Length);
 			byte[] dec = aesobj.decrypt(enc);
 			Assert.AreEqual(dave,dec);
-			
 		}
 	}
 }

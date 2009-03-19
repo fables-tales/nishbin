@@ -20,6 +20,8 @@ namespace libnish.Crypto
 		public byte[] key;
 		public byte[] iv;
 		private aes aes = new aes();
+
+        // FIXME: Officialy define chunk size in protocol/allow changes
 		
 		public allornothingtransform(byte[] file){
 			this.message.Clear();
@@ -29,18 +31,27 @@ namespace libnish.Crypto
 				Array.Copy(file,i*1024,copy,0,1024);
 				message.Add(copy);
 			}
-			if (file.Length % 1024 != 0){
-				byte[] copy = new byte[1024];
-				i=0;
-				for(i=0;i<file.Length;i++){
-					copy[i] = file[i]; 
-				}
-				while (i < 1024){
-					copy[i] = 0;
-					i++;
-				}
-				message.Add(copy);
-			}
+            if (file.Length % 1024 != 0)
+            {
+                byte[] copy = new byte[1024];
+                i = 0;
+                for (i = 0; i < file.Length; i++)
+                {
+                    copy[i] = file[i];
+                }
+                while (i < 1024)
+                {
+                    copy[i] = 0;
+                    i++;
+                }
+                message.Add(copy);
+            }
+            else
+            {
+                byte[] copy = new byte[1024];
+                Array.Copy(file, ((file.Length) - 1024), copy, 0, 1024);
+                message.Add(copy);
+            }
 			
 			
 		}

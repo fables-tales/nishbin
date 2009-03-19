@@ -50,11 +50,19 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debug\NetWatcher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debug\NetWatcher.Designer.cs">
+      <DependentUpon>NetWatcher.cs</DependentUpon>
+    </Compile>
     <Compile Include="EncryptedConnection.cs" />
     <Compile Include="Limits.cs" />
     <Compile Include="Crypto\dh.cs" />
@@ -74,6 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Debug\NetWatcher.resx">
+      <DependentUpon>NetWatcher.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
