@@ -2,47 +2,10 @@
 using System.Collections.Generic;
 
 using System.Text;
+using System.Net.Sockets;
 
 namespace libnish.PeerFinders
 {
-    public struct PotentialPeer
-    {
-        public string IP;
-        public int Port;
-
-        public override bool Equals(object obj)
-        {
-            if (obj.GetType() == this.GetType())
-                if (((PotentialPeer)obj).IP == this.IP)
-                    if (((PotentialPeer)obj).Port == this.Port)
-                        return true;
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            // rly rly don't care
-            // TODO:: Validate IP, make sure IP is IPv4 address (or fix following code to do v6 too:)
-            return (((long)int.Parse(IP.Replace(".", "")) << 32) + Port).GetHashCode();
-        }
-
-        public static bool operator == (PotentialPeer a, PotentialPeer b)
-        {
-            return ((a.IP == b.IP) && (a.Port == b.Port));
-        }
-
-        public static bool operator != (PotentialPeer a, PotentialPeer b)
-        {
-            return ((a.IP != b.IP) || (a.Port != b.Port));
-        }
-
-        public bool TryConnect(out Peer Peer)
-        {
-			Peer = null;
-			return true;
-        }
-    }
-
     public abstract class PeerFinder
     {
         private List<string> BlacklistedPeers = new List<string>();
@@ -63,6 +26,8 @@ namespace libnish.PeerFinders
             }
         }
 
+        // TODO: CRAP architecturing. So we don't check for repeat peers in peerfinder, but every peerfinder
+        // DOES have an individual blacklist?! ugh. not thought through properly. will fix soonish probs...
         internal bool IsPeerBlacklisted(PotentialPeer Details)
         {
             lock (BlacklistedPeers)
@@ -72,5 +37,7 @@ namespace libnish.PeerFinders
         }
 
         public abstract bool TryGetPeer(out PotentialPeer PeerDetails);
+
+        public abstract bool ArePeersAvailable();
     }
 }

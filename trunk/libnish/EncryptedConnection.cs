@@ -85,7 +85,8 @@ namespace libnish
         /// Encrypts and sends the appropriate data.
         /// </summary>
         /// <param name="data">The data to encrypt and send. (If not a multiple of 16 bytes, it will be copied into another array and padded.)</param>
-        /// <remarks>If it is not a multiple of 16 bytes, it will be copied into another array and padded with \ns. Pass in multiples of 16 bytes!!</remarks>
+        /// <remarks>If it is not a multiple of 16 bytes, it will be copied into another array and padded with \ns. Pass in multiples of 16 bytes!!
+        /// That said, copying in ram is (unsurpisingly) stupid fast.  So pass in multiples of 16 bytes... if it's not too much trouble. :)</remarks>
         protected void EncryptAndSend(byte[] data)
         {
             byte[] copiedData = data;
@@ -96,19 +97,16 @@ namespace libnish
             EncryptAndSendRefQuick(ref copiedData);
         }
 
-        /// <summary>
-        /// EncryptAndSendRefQuick -- does things quickly liek.
-        /// </summary>
-        /// <param name="data"></param>
-        protected void EncryptAndSendRefQuick(ref byte[] data)
+        // Made private, as this method is probably going to do more harm than good if actually used anywhere.
+        // TODO: Either expose this function (if there's any use for what may not even improve performance), OR combine it
+        //  with EncryptAndSend already!
+        private void EncryptAndSendRefQuick(ref byte[] data)
         {
             if (data.Length % 16 != 0)
             {
                 int OriginalLength = data.Length;
 
                 Array.Resize(ref data, (OriginalLength + (16 - (OriginalLength % 16))));
-
-                
 
                 for (int i = OriginalLength; i < data.Length; i++)
                     data[i] = 10;  // '\n'
@@ -134,16 +132,13 @@ namespace libnish
                 HandsShaken = true;
 
             // Get key. (first DH pass)
-            
             byte[] key = DoDH(false);
+
             // Get IV! (second DH pass)
-            
             byte[] iv = DoDH(true);
 
 			if (key == null || iv == null)
 				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
-
-            
 
 			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
         }
@@ -188,7 +183,7 @@ namespace libnish
                     dh.computeK1();
 
                     // person a: send k1 to person b
-                    bw.Write(MakeIt32Bytes(dh.k1.GetBytes()));
+                    bw.Write(ForceNBytes(32, dh.k1.GetBytes()));
                     // (get their k1, or 'k2' as we like to call it.)
                     dh.k2 = new BigInteger(br.ReadBytes(32));
 
@@ -213,32 +208,14 @@ namespace libnish
                     dh.computeK1();
 
                     // person b: send k2 (our k1) to person a
-                    bw.Write(MakeIt32Bytes(dh.k1.GetBytes()));
+                    bw.Write(ForceNBytes(32, dh.k1.GetBytes()));
                     dh.k2 = new BigInteger(br.ReadBytes(32));
 
                     // compute.
                     dh.computeKey();
 
 					if (IVNotKey)
-					{
                         return Convert32To16(dh.key);
-
-                        // TODO: If you can read this, delete the below. keeping temporarily for safekeeping...
-						/*byte[] kl = new byte[16];
-						byte[] kh = new byte[16];
-
-						kh = MakeIt16Bytes((dh.key >> 128).GetBytes());
-						kl = MakeIt16Bytes((dh.key % (BigInteger)(1 << 128)).GetBytes());
-
-						byte[] result = new byte[16];
-
-						for (int i = 0;i<result.Length;i++)
-						{
-							result[i] = (byte) (kl[i] ^ kh[i]);
-						}
-
-						return result;*/
-					}
 					else
 						return dh.key.GetBytes();
             }
@@ -251,8 +228,8 @@ namespace libnish
             byte[] kl = new byte[16];
             byte[] kh = new byte[16];
 
-            kh = MakeIt16Bytes((thirtytwo >> 128).GetBytes());
-            kl = MakeIt16Bytes((thirtytwo % (BigInteger)(1 << 128)).GetBytes());
+            kh = ForceNBytes(16, (thirtytwo >> 128).GetBytes());
+            kl = ForceNBytes(16, (thirtytwo % (BigInteger)(1 << 128)).GetBytes());
 
             byte[] result = new byte[16];
 
@@ -265,10 +242,20 @@ namespace libnish
         }
 
 
+        private byte[] ForceNBytes(int N, byte[] LessThanNBytes)
+        {
+            byte[] output = new byte[N];
+
+            for (int i = 0; i < N; i++)
+                output[i] = 0;
+            for (int i = 0; i < LessThanNBytes.Length; i++)
+                output[i + (N - LessThanNBytes.Length)] = LessThanNBytes[i];
+
+            return output;
+        }
 
         private byte[] MakeIt32Bytes(byte[] LessThan32Bytes)
         {
-            //List<byte> output = new List<byte>();
             byte[] output = new byte[32];
 
             for (int i = 0; i < 32; i++)
