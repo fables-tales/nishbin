@@ -21,50 +21,25 @@ namespace libnish.PeerFinders
             pp.Port = port;
             AddPotentialPeer(pp);
         }
-
-        public override bool TryGetPeer(out PotentialPeer PeerDetails)
+        
+        public override bool TryGetPeer(out List<PotentialPeer> PeersList)
         {
             lock (PotentialPeerList)
             {
                 if (PotentialPeerList.Count > 0)
                 {
-                    int i = new Random().Next(PotentialPeerList.Count);
-                    PeerDetails = PotentialPeerList[i];
-                    Console.WriteLine("DebugPeerFinder: Got request for peer. Returning peer #" + i.ToString() + ", '" + PeerDetails.IP + ":" + PeerDetails.Port.ToString() + "'.");
-
-                    if (IsPeerBlacklisted(PeerDetails))
-                    {
-                        ConsoleColor oldColour = Console.ForegroundColor;
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("WARNING. Peer '" + PeerDetails.IP + ":" + PeerDetails.Port.ToString() + "' has been blacklisted, but the DebugPeerFinder is too dumb to care. Ignoring.");
-                        Console.ForegroundColor = oldColour;
-                    }
-
-                    NetEvents.Add(NetEventType.FoundPeers, "DebugPeerFinder found peer '" + PeerDetails.IP + ":" + PeerDetails.Port.ToString() + "'.", new object[] { PeerDetails.IP, PeerDetails.Port }, this);
-                    return true;
+                	Console.WriteLine("DebugPeerFinder got request for peers -- returning " + PotentialPeerList.Count.ToString() + " peers.");
+                	PeersList = new List<PotentialPeer>(PotentialPeerList.ToArray());  // is this even valid c#
+                	return true;
                 }
                 else
                 {
-                    Console.WriteLine("DebugPeerFinder: Got request for peer, but no peers are in the list!");
-                    NetEvents.Add(NetEventType.FoundPeerFailure, "DebugPeerFinder has no peers in it.", null, this);
-                    PeerDetails = null;
-                    return false;
+                	Console.WriteLine("DebugPeerFinder: Got request for peer, but no peers are in the list!");
+                	PeersList = null;
+                	return false;
                 }
-            }
-        }
+        	}
+		}
 
-        public override bool ArePeersAvailable()
-        {
-            lock (PotentialPeerList)
-            {
-                if (PotentialPeerList.Count == 0)
-                {
-                    Console.WriteLine("DebugPeerFinder: Asked if any peers are available, and none are.");
-                    return false;
-                }
-                else
-                    return true;
-            }
-        }
-    }
+	}
 }

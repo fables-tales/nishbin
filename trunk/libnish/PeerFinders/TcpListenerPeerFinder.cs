@@ -7,7 +7,8 @@ using System.Net;
 namespace libnish.PeerFinders
 {
     // TODO: UPnP.
-
+    // down thar, to trygetpeer()
+    
     public class TcpListenerPeerFinder : PeerFinder
     {
         TcpListener tListener;
@@ -38,70 +39,49 @@ namespace libnish.PeerFinders
             tListener.Stop();
         }
 
-        public override bool TryGetPeer(out PotentialPeer PeerDetails)
+        public override bool TryGetPeer(out List<PotentialPeer> PeersList)
         {
-            TcpClient tclient;
-
-            if (!listenerStarted)
+            //MY EYEEEEEEEEES don't hurt anymore dpf dpf dpf <<<<<<<
+            // NOTE TO SELF: NO IT ISNT YOU NEED TO CLEAN UP 2nd HALF OK
+            
+            if (!listenerStarted || !tListener.Pending())
             {
-                PeerDetails = null;
+                PeersList = null;
                 return false;
             }
+            
+            PeersList = new List<PotentialPeer>();
 
-            if (tListener.Pending())
+            while (tListener.Pending())
             {
                 try
                 {
+                	TcpClient tclient;
+                	
                     tclient = tListener.AcceptTcpClient();
+                    
+                    // Ok, we successfully accepted the TcpClient.
+				    // Time to fill in the appropriate boxes.
+				    PotentialPeer pp = new PotentialPeer();
+				    IPEndPoint iep = (IPEndPoint)(tclient.Client.RemoteEndPoint);
+
+				    pp.IP = iep.Address.ToString();
+				    pp.Port = iep.Port;
+				    pp.SetAlreadyEstablishedConnection(tclient);
+				    
+				    PeersList.Add(pp);
                 }
                 catch (Exception e)
                 {
                     NetEvents.Add(NetEventType.PeerConnectFail, "Failed to accept incoming TCP connection in TcpListenerPeerFinder.\nException was:\n" + e.ToString(), new object[] { e }, this);
-                    PeerDetails = null;
+                    PeersList = null;
                     return false;
                 }
             }
-            else
-            {
-                PeerDetails = null;
-                return false;
-            }
 
-            // Ok, we successfully accepted the TcpClient.
-            // Time to fill in the appropriate boxes.
-            PotentialPeer pp = new PotentialPeer();
-            IPEndPoint iep = (IPEndPoint)(tclient.Client.RemoteEndPoint);
-
-            pp.IP = iep.Address.ToString();
-            pp.Port = iep.Port;
-            pp.SetAlreadyEstablishedConnection(tclient);
-
-            // TODO: Some way to check if blacklisted without actually having to accept the connection first?!
-            if (IsPeerBlacklisted(pp))
-            {
-                try
-                {
-                    tclient.Client.Close();
-                    tclient.Close();
-                }
-                finally
-                {
-                    NetEvents.Add(NetEventType.PeerConnectFail, "Failed to accept incoming TCP connection in TcpListenerPeerFinder, as the peer has been blacklisted.", new object[] { pp.IP, pp.Port }, this);
-                    PeerDetails = null;
-                }
-                return false;
-            }
-
-            PeerDetails = pp;
             return true;
         }
 
-        public override bool ArePeersAvailable()
-        {
-            if (!listenerStarted)
-                return false;
-
-            return tListener.Pending();
-        }
+        //there was something here, then it fucked off, and it died, in a hole
     }
 }

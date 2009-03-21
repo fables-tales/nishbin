@@ -10,6 +10,11 @@ namespace libnish.PeerFinders
         public string IP;
         public int Port;
         private TcpClient AlreadyEstablishedConnection = null;
+        
+        ~PotentialPeer()
+        {
+        	CloseIfConnected();
+        }
 
         public override bool Equals(object obj)
         {
@@ -23,6 +28,15 @@ namespace libnish.PeerFinders
         public void SetAlreadyEstablishedConnection(TcpClient AEC)
         {
             AlreadyEstablishedConnection = AEC;
+        }
+        
+        public void CloseIfConnected()
+        {
+        	if (AlreadyEstablishedConnection != null && AlreadyEstablishedConnection.Connected)
+            {
+                AlreadyEstablishedConnection.Client.Close();
+                AlreadyEstablishedConnection.Close();
+            }
         }
 
         public override int GetHashCode()
@@ -57,41 +71,40 @@ namespace libnish.PeerFinders
             catch (SocketException se)
             {
                 NetEvents.Add(NetEventType.PeerConnectFail, "Failed to connect to peer '" + IP + ":" + Port.ToString() + "'.\nGot socket exception:\n" + se.ToString(), new object[] { se }, this);
-                goto Fail;
+                PeerOut = null;
+                return false;
             }
             catch (Exception e)
             {
                 NetEvents.Add(NetEventType.PeerConnectFail, "Failed to connect to peer '" + IP + ":" + Port.ToString() + "'.\nAn unrecognised exception occurred:\n" + e.ToString(), new object[] { e }, this);
-                goto Fail;
+                PeerOut = null;
+                return false;
             }
 
             // Fortunately, a lot of the protocol-related setup stuff lives in Peer.
             // (Considering moving some of this code, too.  It's almost hidden here.)
             Peer p;
 
-            try
-            {
-                p = new Peer(Connection, IP, Port, Limits.Default, (AlreadyEstablishedConnection == null));
-            }
-            catch (Exception e)
-            {
-                NetEvents.Add(NetEventType.PeerConnectFail, "Failed to negotiate a connection with peer '" + IP + ":" + Port.ToString() + "'.\nAn exception occurred:\n" + e.ToString(), new object[] { e }, this);
-                goto Fail;
-            }
-
+		    try
+		    {
+		        p = new Peer(Connection, IP, Port, Limits.Default, (AlreadyEstablishedConnection == null));
+		    }
+		    catch (Exception e)
+		    {
+		        NetEvents.Add(NetEventType.PeerConnectFail, "Failed to negotiate a connection with peer '" + IP + ":" + Port.ToString() + "'.\nAn exception occurred:\n" + e.ToString(), new object[] { e }, this);
+		        PeerOut = null;
+                if (Connection != null && Connection.Connected)
+                {
+                    Connection.Client.Close();
+                    Connection.Close();
+                }
+                return false;
+		    }
+            
 
             // Success at last!
             PeerOut = p;
             return true;
-
-        Fail:
-            PeerOut = null;
-            if (Connection != null && Connection.Connected)
-            {
-                Connection.Client.Close();
-                Connection.Close();
-            }
-            return false;
         }
     }
 }

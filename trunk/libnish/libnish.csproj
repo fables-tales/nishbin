@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsciiThings.cs" />
     <Compile Include="Debug\NetWatcher.cs">
       <SubType>Form</SubType>
     </Compile>
