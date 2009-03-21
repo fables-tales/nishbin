@@ -29,6 +29,14 @@ namespace libnish
         BigInteger iv = null;
 
         aes aes;
+        
+        public string IPAddress
+        {
+        	get
+        	{
+        		return IP;
+        	}
+        }
 
         public int Available
         {
