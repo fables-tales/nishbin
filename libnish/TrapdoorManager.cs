@@ -8,4 +8,5 @@ namespace libnish
     public class TrapdoorManager
     {
     }
+
 }

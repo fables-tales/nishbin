@@ -29,7 +29,7 @@ namespace libnish.PeerFinders
                 if (PotentialPeerList.Count > 0)
                 {
                 	Console.WriteLine("DebugPeerFinder got request for peers -- returning " + PotentialPeerList.Count.ToString() + " peers.");
-                	PeersList = new List<PotentialPeer>(PotentialPeerList.ToArray());  // is this even valid c#
+                	PeersList = new List<PotentialPeer>(PotentialPeerList.ToArray());
                 	return true;
                 }
                 else
