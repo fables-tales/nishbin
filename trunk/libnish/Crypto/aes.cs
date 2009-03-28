@@ -41,8 +41,6 @@ namespace libnish.Crypto
 
 				dec = handler.CreateDecryptor();
 				enc = handler.CreateEncryptor();
-				byte[] win = new byte[16];
-				byte[] die = new byte[16];
 				
 			} else{
 				throw new InvalidOperationException("key not long enough");

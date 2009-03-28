@@ -10,10 +10,12 @@ namespace libnish.PeerFinders
         public string IP;
         public int Port;
         private TcpClient AlreadyEstablishedConnection = null;
-        
+		
+		
         ~PotentialPeer()
         {
         	CloseIfConnected();
+			
         }
 
         public override bool Equals(object obj)
@@ -32,7 +34,8 @@ namespace libnish.PeerFinders
         
         public void CloseIfConnected()
         {
-        	if (AlreadyEstablishedConnection != null && AlreadyEstablishedConnection.Connected)
+			// here be dragons        	
+			if (AlreadyEstablishedConnection != null && AlreadyEstablishedConnection.Connected)
             {
                 AlreadyEstablishedConnection.Client.Close();
                 AlreadyEstablishedConnection.Close();
@@ -103,7 +106,9 @@ namespace libnish.PeerFinders
             
 
             // Success at last!
+			AlreadyEstablishedConnection = null;
             PeerOut = p;
+			
             return true;
         }
     }
