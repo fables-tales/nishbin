@@ -30,12 +30,20 @@ namespace libnish
 
         aes aes;
         
-        public string IPAddress
+        public string RemoteIP
         {
         	get
         	{
         		return IP;
         	}
+        }
+
+        public int RemotePort
+        {
+            get
+            {
+                return Port;
+            }
         }
 
         public int Available
@@ -71,6 +79,12 @@ namespace libnish
             Handshake();
 
             
+        }
+
+        public void Close()
+        {
+            if (TcpClient != null && TcpClient.Connected)
+                TcpClient.Close();
         }
 
 
@@ -249,7 +263,6 @@ namespace libnish
             return result;
         }
 
-
         private byte[] ForceNBytes(int N, byte[] LessThanNBytes)
         {
             byte[] output = new byte[N];
@@ -258,30 +271,6 @@ namespace libnish
                 output[i] = 0;
             for (int i = 0; i < LessThanNBytes.Length; i++)
                 output[i + (N - LessThanNBytes.Length)] = LessThanNBytes[i];
-
-            return output;
-        }
-
-        private byte[] MakeIt32Bytes(byte[] LessThan32Bytes)
-        {
-            byte[] output = new byte[32];
-
-            for (int i = 0; i < 32; i++)
-                output[i] = 0;
-            for (int i = 0; i < LessThan32Bytes.Length; i++)
-                output[i + (32 - LessThan32Bytes.Length)] = LessThan32Bytes[i];
-
-            return output;
-        }
-
-        private byte[] MakeIt16Bytes(byte[] LessThan16Bytes)
-        {
-            byte[] output = new byte[16];
-
-            for (int i = 0; i < 16; i++)
-                output[i] = 0;
-            for (int i = 0; i < LessThan16Bytes.Length; i++)
-                output[i + (16 - LessThan16Bytes.Length)] = LessThan16Bytes[i];
 
             return output;
         }

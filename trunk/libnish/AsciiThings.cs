@@ -3,6 +3,28 @@ namespace libnish
 {
 	public static class CommentSpam
 	{
+		// there isn't a line zero
+        // you bastard ololololol
+        
+        // incidentally one of my neighbors may be hooking me up with a summer job at a firm that writes code for something
+            // they need good mathmatician-programmers.
+            // i'm a good mathematician-programmer
+            // or at least, I think I am...
+            // am i?
+            // I don't think I should have had that third beer...
+            // I had a first and a second...
+            // i'm not totally drunk.
+            // explains why you didn't think peermanager existed, anyway...
+            
+            // coding when drunk does not work.
+            // did you have a first and a second
+            // because if not, that might be where you're going wrong
+            // heh. i can see why you might stand a chance then.
+            // tbh i thought you were gonna say 'my neighbour may be hooking me up with a girl' and i was like oh ffs you better not say that
+            // fortunately, you both exceeded and FSASDGS my expectations. so that's good. :)
+            
+            // WHAT NOW!AAAIEEUEUUUUUU
+            
 		/*
 PZZPPZPZZPDYSPPEEDDPDZZZZPPPPYYYYZZSSSSSSS666SSSYS6SS6SS6SSSYYZY56SSYYSSYYPPDD6SZYZZDDDHZP52656S26c5  cs65YSPZDPPDPZZPPPPPZZYSYYZZZZPPDDDDPPPPYZ62c:;:;s.          :    .;s;;s;ZcHZHDDDEEDDEEEEEEEEEEEEE
 EDDDDDDDDDEPPDPPPPPDDYZYYYYPEZY52SZYYSS666666SYYPY66SSDZ6SSYPZYYSYSSYY25PZPZYYZZDZDPEH6YcsPYNNDNPDDHPPEPPPPZZZZYZZPPDDZZYYZPEEHNHHEDDPDPDDPPPDPES2:      22PZEY ;::HZYS:s      S.H6EZEDDDDDDDDDDDPPDDPPP
@@ -363,5 +385,63 @@ DPDYPs5   .      ;c::      s6PH6c                   65PPNPY6;6PZ .            ..
             // liberal application of the delete key is permitted.
             // i can't bear to, though.
             // ADDED NEW CLASS ASCIITHINGS.CS FOR COPYPASTA. ALL PROGRAMS REQUIRE COPYPASTA.
+
+        // oh fuck this. bah. i've had enough of coding this thingy today, mon amis (just because you see double, doesn't mean...)
+        // me too... 
+        // we off til tomorrow or someshite then?
+        // has anything been acheived since commit?
+        // i changed one line, and started fixing this func. so not really.
+        // shall we not commit??
+        // no point.
+        // are you goning to save this into your working copy?
+        // that's what i've been doing constantly.
+        // ok, we might have to delete the mass of comment spam...
+        // it's kinda stupid
+        // please tell me you didn't add asciithings into a public revision of the tree?
+        // k. i won't.
+        // did you?
+        // i'm not allowed to say.
+        // you're allowed to say...
+        // yes. yes i did.
+        // AND I'D DO IT AGAIN, FOR THE SAKE OF MY COMRADES!
+        // GO GO RUSSIA
+        // fuck with giant bells on it...
+        // can we ever remove it from the tree?
+        // ever?
+        // only by making enough commits that google starts dropping the old. ~10 or so.
+        // cuntflaps
+        // dunno why you'd want to anyway, man.
+        // aha!
+        // i spy ulterior motive
+        // you were gonna be like 'oh yeah i totally worked on libnish with this awesome hacker called merlyn who had superpowers', weren't you!
+        // if it ever got massive, then yes...
+        // now I can't
+        // because it's got a shit tonne of comment spajfioepqfjoiqjf on it.
+        // oh well.
+        // i'll just have to hope my __potential__ oxford tutor hasn't been googling for me.
+        // ooh. that's a good point. you use your real name quite a bit, don't you?
+        // only __all__ __the__ __fucking__ __time__
+        // try googling 'di' some time. it's one reason i chose the alias.
+        // googling ooh or ahh does fuck all, too.
+        // i am quite pleased with myself about this, yes.
+
+        // BWAHAahahaahahaahaaaahahhhaahahahaahahahahaahahahahahahhhhhhhhhhhhhhhhh.~croak.
+        // good times. good times. :D
+        // i already committed it and added it to the project, so whatever. *shrugs*
+
+        // my googlecode page is the 5th result when you google "samphippen"
+        // without the space
+        // that means this project is not very hard to find...
+        // at all...
+        // your facebook is your 4th with your name with a space in it. hope that's clean too, sammy.
+
+        // Hi Dr. S. Cameron
+        // lmao. that is NOT your facebook.
+        // i'm done for the night
+        // http://www.facebook.com/people/Sam-Phippen/3627036 http://www.facebook.com/people/Sam-Phippen/3627036 http://www.facebook.com/people/Sam-Phippen/3627036
+        // LOLZ!!! 
+
+        // Yeah. we're off.
+        // hey man, you wanna play xbox some time?! i'tll totaltly be so RAD and awesome ozlozlzz
 	}
 }

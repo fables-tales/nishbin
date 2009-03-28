@@ -13,24 +13,119 @@ namespace libnish
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
 
         Thread P2PThread;
+        Thread PacketProcessingThread;
 
         int TargetPeerCount;
         int MaxPeerCount;
+
+        int BigFuckingConnectingCounter = 0;
+
+        bool P2PThreadRun = false;
+        bool PacketThreadRun = false;
         
         List<string> BlacklistedPeers = new List<string>();
-        
 
-        public PeerManager(Peer[] InitialPeers, PeerFinder[] InitialPeerFinders, int TargetPeerNum, int MaxPeerNum)
+        Queue<Packet> PacketQueue = new Queue<Packet>();
+
+        Limits Limits;
+        
+        public PeerManager(Peer[] InitialPeers, PeerFinder[] InitialPeerFinders, Limits Limits, int TargetPeerNum, int MaxPeerNum)
         {
             Peers.AddRange(InitialPeers);
             PeerFinders.AddRange(InitialPeerFinders);
 
             TargetPeerCount = TargetPeerNum;
             MaxPeerCount = MaxPeerNum;
-            
-            //P2PThread = new Thread(new ThreadStart(
 
-            //((voidThing)dh.getRandomNumber()).Invoke();
+            this.Limits = Limits;
+
+            P2PThread = new Thread(new ThreadStart(PeerThreadProc));
+            P2PThreadRun = true;
+            P2PThread.Start();
+
+            PacketProcessingThread = new Thread(new ThreadStart(PPProc));
+            PacketThreadRun = true;
+            PacketProcessingThread.Start();
+        }
+
+        private void PPProc()
+        {
+            // todo write this
+
+            while (PacketThreadRun)
+            {
+                if (PacketQueue.Count > 0)
+                {
+                    Packet p = PacketQueue.Dequeue();
+
+                    if (p.Type != PacketType.MetaNotify)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Got MetaNotifyPacket!");
+                        Console.WriteLine("MNP uuid contents:: " + ((MetaNotifyPacket)p).ContainingUUID);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }
+                }
+
+                Thread.Sleep(100);
+            }
+        }
+
+        public void PushPacketToAll(Packet p)
+        {
+            lock (Peers)
+            {
+                foreach (Peer pier in Peers)
+                    pier.Send(p);
+            }
+        }
+
+        private void PeerThreadProc()
+        {
+            DateTime LastTryGetMorePeersTime = DateTime.MinValue;
+
+            while (P2PThreadRun)
+            {
+                // compensate for if some nasty person changes the system time
+                if (DateTime.UtcNow < LastTryGetMorePeersTime)
+                    LastTryGetMorePeersTime = DateTime.MinValue;
+
+                if (BigFuckingConnectingCounter == 0 && ((DateTime.UtcNow - LastTryGetMorePeersTime).TotalMilliseconds > Limits.MsBetweenConnectionAttempts))
+                {
+                    lock (Peers)
+                        if (Peers.Count < TargetPeerCount)
+                            this.ConnectMorePeers((Peers.Count - TargetPeerCount) + 2); // TODO: Expose as a setting...?
+
+                    LastTryGetMorePeersTime = DateTime.UtcNow;
+                }
+
+                Thread.Sleep(50);
+
+                lock (Peers)
+                {
+                    foreach (Peer p in Peers)
+                    {
+                        p.Poll();
+
+                        // TODO: poll() needs a hard limit to stop 10000000000 small packets being processed & murdering the system
+                        while (p.PacketAvailable)
+                        {
+                            Packet pa;
+
+                            pa = p.TryGetPacket();
+
+                            if (pa != null)
+                                PacketQueue.Enqueue(pa);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -69,9 +164,17 @@ namespace libnish
 
             foreach (PotentialPeer fpp in Found)
             {
+                BigFuckingConnectingCounter++;
                 ThreadPool.QueueUserWorkItem(delegate(object o)
                     {
-                        ConnectPotentialPeer(fpp);
+                        try
+                        {
+                            ConnectPotentialPeer(fpp);
+                        }
+                        finally
+                        {
+                            BigFuckingConnectingCounter--;
+                        }
                     });
                 
                 SuccessfulAttempts++;
@@ -90,8 +193,12 @@ namespace libnish
         	List<PotentialPeer> OutList = new List<PotentialPeer>();
         	
         	foreach (PotentialPeer pp in InList)
+        	{
         		if (CheckPotentialPeerOK(pp))
         			OutList.Add(pp);
+        		else
+        			pp.CloseIfConnected();
+        	}
         			
         	return OutList;
         }
@@ -110,7 +217,7 @@ namespace libnish
             {
                 foreach (Peer p in Peers){
                     // FIXME: Compare port, too.
-                    if (p.IPAddress == pp.IP){
+                    if (p.RemoteIP == pp.IP){
                     	NetEvents.Add(NetEventType.PeerConnectFail, "Peer already connected.", new object[] { pp.IP, pp.Port }, this);
 				        return false;
 			        }
@@ -128,8 +235,6 @@ namespace libnish
             
             return true;
         }
-        
-        
 
         public void BlacklistPeer(string IP)
         {
@@ -158,10 +263,23 @@ namespace libnish
         private void ConnectPotentialPeer(PotentialPeer pp)
         {
             Peer p;
-            
-            pp.TryConnect(out p);
 
-            Peers.Add(p);
+            if (pp.TryConnect(out p))
+			{
+				lock (Peers)
+				{
+                    if (Peers.Count < TargetPeerCount)
+                    {
+                        NetEvents.Add(NetEventType.NewPeer, "New peer '" + p.RemoteIP + ":" + p.RemotePort.ToString() + "' added.", new object[] { p.RemoteIP, p.RemotePort }, this);
+                        Peers.Add(p);
+                    }
+                    else
+                    {
+                        NetEvents.Add(NetEventType.RejectedPeerBecauseFull, "Rejected peer '" + p.RemoteIP + ":" + p.RemotePort.ToString() + "' as we've already got more peers than you can shake a big thing at.", new object[] { p.RemoteIP, p.RemotePort }, this);
+                        p.Close();
+                    }
+		       	}
+           	}
         }
     }
 }
