@@ -100,7 +100,7 @@ namespace libnish
                 {
                     lock (Peers)
                         if (Peers.Count < TargetPeerCount)
-                            this.ConnectMorePeers((Peers.Count - TargetPeerCount) + 2); // TODO: Expose as a setting...?
+                            this.ConnectMorePeers((TargetPeerCount - Peers.Count) + 2); // TODO: Expose as a setting...?
 
                     LastTryGetMorePeersTime = DateTime.UtcNow;
                 }
@@ -268,7 +268,7 @@ namespace libnish
 			{
 				lock (Peers)
 				{
-                    if (Peers.Count < TargetPeerCount)
+                    if (Peers.Count < MaxPeerCount)
                     {
                         NetEvents.Add(NetEventType.NewPeer, "New peer '" + p.RemoteIP + ":" + p.RemotePort.ToString() + "' added.", new object[] { p.RemoteIP, p.RemotePort }, this);
                         Peers.Add(p);
