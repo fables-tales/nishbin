@@ -95,7 +95,7 @@ namespace libnish
 		public HerePacket(byte[] UnencryptedContent){
 			
 			string[] data = System.Text.Encoding.ASCII.GetString(UnencryptedContent).Substring(5).Split(' ');
-			if (data.Length != 3){
+			if (data.Length == 3){
 				string uuid = data[0];
 				if (Crypto.UUID.verifyuuid(uuid)){
 					int length = int.Parse(data[1]);
