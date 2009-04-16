@@ -7,7 +7,8 @@
 using System;
 using Mono.Math;
 
-
+//should we assume that Mono.Math does modular arithmatic properly, and securely?
+//side channel attacks could be possible don't you know
 
 namespace libnish.Crypto
 {

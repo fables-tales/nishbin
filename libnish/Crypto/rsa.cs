@@ -13,6 +13,7 @@ namespace libnish.Crypto
 {
 	
 	//this probably shouldn't be used yet.
+    //this is also highly incomplete
 	public class RSAKeyPair
 	{
 		private BigInteger p,q,n,e,d;
@@ -41,12 +42,7 @@ namespace libnish.Crypto
 				e = i;
 			}
 			System.Console.WriteLine("e done");
-			// this next bit is fucking complicated
-			// this is also the slowest possible method
-			// for doing this
-			// de = 1 mod store
-			// d.e = - q.store = 1
-			// solve using euler.
+			
 			d = e.ModInverse(n);
 			System.Console.WriteLine("d done");
 			
@@ -79,6 +75,7 @@ namespace libnish.Crypto
 					for (int i = (input.Length-1);i>=0;i--){
 						buffer += input[i] << i*8;
 					}
+                    //wat?
 					buffer = buffer << (8192 - 256);
 					buffer += (Math.math.getRandom(8192) >> 256);
 					buffer = buffer.ModPow(e,n);

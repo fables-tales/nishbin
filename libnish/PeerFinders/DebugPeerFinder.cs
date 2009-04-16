@@ -4,6 +4,9 @@ using System.Text;
 
 namespace libnish.PeerFinders
 {
+    /// <summary>
+    /// Used when debugging to find peers, adds peers manually
+    /// </summary>    
     public class DebugPeerFinder : PeerFinder
     {
         private List<PotentialPeer> PotentialPeerList = new List<PotentialPeer>();

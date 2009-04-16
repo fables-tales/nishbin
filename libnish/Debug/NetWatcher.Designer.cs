@@ -26,6 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+		// we're using winforms already!?
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();

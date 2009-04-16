@@ -8,11 +8,17 @@ using libnish.Crypto;
 using Mono.Math;
 using System.Net.Sockets;
 
+// TODO: use Mono.Security.Protocol.Tls to make this less interuptable
+// tls is a __really__ good idea for this
 namespace libnish
 {
+    /// <summary>
+    /// base class for connections in nishbin 
+    /// </summary>    
     public abstract class EncryptedConnection
     {
-        string IP;
+        
+		string IP;
         int Port;
 
         TcpClient TcpClient;
@@ -27,7 +33,7 @@ namespace libnish
 
         BigInteger key = null;
         BigInteger iv = null;
-
+        //for every instance of aes aes that is typed, you should put a penny in the swear jar
         aes aes;
         
         public string RemoteIP
@@ -109,7 +115,9 @@ namespace libnish
         /// <param name="data">The data to encrypt and send. (If not a multiple of 16 bytes, it will be copied into another array and padded.)</param>
         /// <remarks>If it is not a multiple of 16 bytes, it will be copied into another array and padded with \ns. Pass in multiples of 16 bytes!!
         /// That said, copying in ram is (unsurpisingly) stupid fast.  So pass in multiples of 16 bytes... if it's not too much trouble. :)</remarks>
-        protected void EncryptAndSend(byte[] data)
+		
+        // surely this shit doesn't actually work?
+		protected void EncryptAndSend(byte[] data)
         {
             byte[] copiedData = data;
 
@@ -122,6 +130,7 @@ namespace libnish
         // Made private, as this method is probably going to do more harm than good if actually used anywhere.
         // TODO: Either expose this function (if there's any use for what may not even improve performance), OR combine it
         //  with EncryptAndSend already!
+		// oh right, resize
         private void EncryptAndSendRefQuick(ref byte[] data)
         {
             if (data.Length % 16 != 0)
@@ -131,7 +140,9 @@ namespace libnish
                 Array.Resize(ref data, (OriginalLength + (16 - (OriginalLength % 16))));
 
                 for (int i = OriginalLength; i < data.Length; i++)
-                    data[i] = 10;  // '\n'
+					// would it not make more sense to actually use \n mon amis?
+					data[i] = 10;  // '\n'
+				
             }
 
             bw.Write(aes.encrypt(data));
@@ -142,11 +153,14 @@ namespace libnish
             return aes.decrypt(br.ReadBytes(bytes));
         }
 
+        /// <summary>
+        /// does the handshake to build the initial DH key
+        /// </summary>        
         private void Handshake()
         {
             // If already started/done handshake because remote peer initiated handshake, DO NOT error here!!
             // Need to just fail silently.
-
+			
             // Now, what to do if both handshake at the same time is something completely different... :<
             if (HandsShaken)
                 return;
@@ -158,10 +172,10 @@ namespace libnish
 
             // Get IV! (second DH pass)
             byte[] iv = DoDH(true);
-
+            
 			if (key == null || iv == null)
 				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
-
+			// the line below this one is slightly arse
 			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
         }
 
@@ -177,7 +191,7 @@ namespace libnish
 	         * person b: send k2 to person a
 	         * person a: compute key = (k2^b) mod p
 	         * person b: compute key = (k1^b) mod p */
-
+            //that couldn't possibly be more confusing
             dh dh = new dh();
 
             byte[] hash;
@@ -194,6 +208,7 @@ namespace libnish
                     
                     // Compute the hash ourselves, to compare with the data we sure are gonna receive right about now
                     hash = ComputeSHA256Hash(dh.g.GetBytes(), dh.p.GetBytes());
+				    // does this call ever time out mez ami?
                     byte[] bsHash = br.ReadBytes(32);
 
                     for (int i = 0; i < 32; i++)
@@ -237,6 +252,7 @@ namespace libnish
                     dh.computeKey();
 
 					if (IVNotKey)
+                        //this is done twice, why!?
                         return Convert32To16(dh.key);
 					else
 						return dh.key.GetBytes();

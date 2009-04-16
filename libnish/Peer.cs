@@ -21,6 +21,7 @@ namespace libnish
             : base(LiveConnection, IPAddress, Port, Limits, Outward)
         {
             // todo: simplify constructor...?
+            // oh god yes
 
 
         }
@@ -88,6 +89,7 @@ namespace libnish
                 if (Available > 0)
                 {
                     // FIXME: might take us too long to react to being pumped with loads of junk data > limit setting. (not til next if statement!)
+                    // buffer a load of data, but only parse it in 4096 byte chunks, or bigger, but something like that
                     byte[] somebytes = ReceiveAndDecrypt(Available);
                     for (int i = 0; i < somebytes.Length; i++)
 					{

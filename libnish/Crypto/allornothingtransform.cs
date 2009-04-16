@@ -11,7 +11,11 @@ using System.Security.Cryptography;
 namespace libnish.Crypto
 {
 	
-	
+	/// <summary>
+	/// this ought to do all or nothing transformations, although security isn't information theoretic yet
+	/// oooooooh, idea, instead of creating a massive key for a series of chunks, xor the stuff together
+	/// does c# have symbolic rational number representation?
+	/// </summary>
 	public class allornothingtransform
 	{
 		public System.Collections.Generic.List<byte[]> message = new List<byte[]>();
@@ -22,7 +26,12 @@ namespace libnish.Crypto
 		private aes aes = new aes();
 
         // FIXME: Officialy define chunk size in protocol/allow changes
-		
+		/// <summary>
+		/// this constructor is used when you have a plaintext file and want to encrypt stuff
+		/// </summary>
+		/// <param name="file">
+		/// A <see cref="System.Byte"/>
+		/// </param>
 		public allornothingtransform(byte[] file){
 			this.message.Clear();
 			int i = 0;
@@ -55,6 +64,18 @@ namespace libnish.Crypto
 			
 			
 		}
+        /// <summary>
+        /// This constructor is used when you have all the chunks and want to decrypt the file
+        /// </summary>
+        /// <param name="chunks">
+        /// A <see cref="System.Collections.Generic.List`1"/>
+        /// </param>
+        /// <param name="keychunks">
+        /// A <see cref="System.Collections.Generic.List`1"/>
+        /// </param>
+        /// <param name="iv">
+        /// A <see cref="System.Byte"/>
+        /// </param>
 		public allornothingtransform(System.Collections.Generic.List<byte[]> chunks,System.Collections.Generic.List<byte[]> keychunks,byte[] iv){
 			this.chunks = chunks;
 			this.keychunks = keychunks;

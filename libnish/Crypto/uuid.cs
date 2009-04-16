@@ -13,7 +13,7 @@ namespace libnish.Crypto
 	public static class UUID
 	{
 		
-		 		
+	    //these uuid's ought never to collide 		
 		public static string  getUUID(){
 			string suuid;
 			System.Guid t1 = System.Guid.NewGuid();
@@ -22,7 +22,8 @@ namespace libnish.Crypto
 			return suuid;
 		}
 		public static bool verifyuuid(string auuid){
-			string[] split1;
+            // TODO: regex instead of comparing with something stupid			
+            string[] split1;
 			string[] split2;
 			if (auuid.Length == getUUID().Length){
 				split1 = auuid.Split('-');
