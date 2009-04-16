@@ -37,6 +37,7 @@ namespace TestPacketeer
                         break;
                     case "?":
                         Console.WriteLine("Valid commands: d.a (to add to debugpeerfinder), ");
+                        Console.WriteLine("m (send a metanotify packet)");
                         break;
                     default:
                         Console.WriteLine("Not a valid command. Use ? to see such things.");

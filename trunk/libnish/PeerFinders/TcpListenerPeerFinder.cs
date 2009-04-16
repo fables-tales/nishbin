@@ -8,7 +8,9 @@ namespace libnish.PeerFinders
 {
     // TODO: UPnP.
     // down thar, to trygetpeer()
-    
+    /// <summary>
+    /// This one is a little weird, it finds peers, by connecting peers that are already connected
+    /// </summary>
     public class TcpListenerPeerFinder : PeerFinder
     {
         TcpListener tListener;

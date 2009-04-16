@@ -7,6 +7,13 @@ using System.Threading;
 
 namespace libnish
 {
+    /// <summary>
+    /// this is the main dave for managing all peers in the system, but only on the push network 
+    /// </summary>    
+    /// <remarks>
+    /// peermanager is a dave, that is because he is slightly sentient
+    /// this dave ought to be pretty thread safe, most of the variables are locked when you call the methods
+    /// </remarks>
     public class PeerManager
     {
         List<Peer> Peers = new List<Peer>();
@@ -51,7 +58,7 @@ namespace libnish
         private void PPProc()
         {
             // todo write this
-
+            // shouldn't this stuff only print stuff to console if debugging flags are enabled?
             while (PacketThreadRun)
             {
                 if (PacketQueue.Count > 0)
@@ -76,12 +83,17 @@ namespace libnish
                 Thread.Sleep(100);
             }
         }
-
+        public void IsThisProgramSkyNetYet(){
+            throw new libnish.Debug.SkynetException("This program has become skynet, please destroy it");
+            
+            
+        }
         public void PushPacketToAll(Packet p)
         {
             lock (Peers)
             {
-                foreach (Peer pier in Peers)
+				//wat?
+				foreach (Peer pier in Peers)
                     pier.Send(p);
             }
         }
@@ -114,6 +126,8 @@ namespace libnish
                         p.Poll();
 
                         // TODO: poll() needs a hard limit to stop 10000000000 small packets being processed & murdering the system
+                        // this loop should probably have a timeout
+                        // is it in a seperate thread from the main one?
                         while (p.PacketAvailable)
                         {
                             Packet pa;
@@ -217,7 +231,8 @@ namespace libnish
             {
                 foreach (Peer p in Peers){
                     // FIXME: Compare port, too.
-                    if (p.RemoteIP == pp.IP){
+                    // fixed??
+                    if (p.RemoteIP == pp.IP && pp.Port == p.RemotePort){
                     	NetEvents.Add(NetEventType.PeerConnectFail, "Peer already connected.", new object[] { pp.IP, pp.Port }, this);
 				        return false;
 			        }

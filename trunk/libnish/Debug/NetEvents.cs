@@ -11,7 +11,8 @@ namespace libnish
         BannedPeer,
         PeerConnectFail,
         NewPeer,
-        RejectedPeerBecauseFull
+        RejectedPeerBecauseFull,
+		DieInAHole,
     }
 
     public struct NetEvent

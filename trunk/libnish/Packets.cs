@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
+/// <summary>
+/// a series of packets used in nishbin
+/// </summary>
 namespace libnish
 {
     public enum PacketType

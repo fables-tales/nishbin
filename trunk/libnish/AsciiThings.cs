@@ -1,7 +1,12 @@
 
 namespace libnish
 {
-	public static class CommentSpam
+/// <summary>
+/// don't read this
+/// ever
+/// seriously
+/// </summary>	
+    public static class CommentSpam
 	{
 		// there isn't a line zero
         // you bastard ololololol
@@ -321,6 +326,7 @@ DPDYPs5   .      ;c::      s6PH6c                   65PPNPY6;6PZ .            ..
             // that is not ambiguous. ah. vvvvvvvvvvvvvvvvvvvvvv that all is, butnot how you worded it above..
             // lesbian vampire killers -> killers of lesbian vampiers, lesbian killers of vampires, lesbian vampires who are killers, vampires who are killers of lesbians
             // it goes on... and on and on and-
+		
             /*pubic stick it in her void, then dieinahole(){//olololololololol
             	//it goes on and on and on...
             	NetEvents.Add(NetEventType.DiedInAHole, "go die in a hole.", new object[] { Hole.Default }, this);
@@ -334,12 +340,13 @@ DPDYPs5   .      ;c::      s6PH6c                   65PPNPY6;6PZ .            ..
             //                                                                                     see above
             // no must stay forever totally of course dawg
             // sup dawg, I heard you like xzibit jokes so I took a jackhammer to your face so you can shut up whilst we're all happier...
-            // YO DAWG WE HEARD YOU LIKE YO YOS SO WE PUT YO DAWG IN A YO YO SO YO CAN YO YO YO DAWG WHILE YO DAWG YO YOS, DAWG
+            // YO DAWG WE HEARD YO LIKE YO YOS SO WE PUT YO DAWG IN A YO YO SO YO CAN YO YO YO DAWG WHILE YO DAWG YO YOS, DAWG
             // sup dawg. i herd u liek functions so we put a function in your function so you can derive while you derive
             // d(f(g(x))/dx = g'(x)*f'(g(x))
             // f'(x)0 = f(x)/0
             // 0 = f(x)/0
             // 0 = 0
+		// didn't we just divide by zero, oshi-
             // thank god we proved that one.
             // :(
             

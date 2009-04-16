@@ -14,18 +14,45 @@ namespace libnish.Crypto.Math
 	
 	public static class math
 	{
-		
-		public static BigInteger getRandom(int bits){
+		/// <summary>
+		/// Generates a random biginteger
+		/// </summary>
+		/// <param name="bits">
+		/// A <see cref="System.Int32"/>
+		/// </param>
+		/// <returns>
+		/// A <see cref="BigInteger"/>
+		/// </returns>
+        
+        //TODO: entropy testing, seed blowing up
+        public static BigInteger getRandom(int bits){
+            
 			return BigInteger.GenerateRandom(bits);
 		}
 		
-		
+		/// <summary>
+		/// generates a prime, relatively good confidence factor
+		/// </summary>
+		/// <param name="bits">
+		/// A <see cref="System.Int32"/>
+		/// </param>
+		/// <returns>
+		/// A <see cref="BigInteger"/>
+		/// </returns>
+        
 		public static BigInteger makePrime(int bits){
-			//TODO: make this more bullet proof
-			return BigInteger.GeneratePseudoPrime(bits);
+            //needs testing			
+			bool passed = false;
+			BigInteger pseudoprime = 0; 
+			while (passed != true){
+				pseudoprime = BigInteger.GeneratePseudoPrime(bits);
+				passed = Mono.Math.Prime.PrimalityTests.RabinMillerTest(pseudoprime,Mono.Math.Prime.ConfidenceFactor.ExtraHigh);
+			}
+			return pseudoprime;
+			
 		}
 	
-		
+		//might be useful later, don't remove
 		public static BigInteger toitient(BigInteger n){
 			BigInteger toit = 0;
 			for(BigInteger i = 0;i<n;i+=1){
@@ -35,6 +62,7 @@ namespace libnish.Crypto.Math
 			}
 			return toit;
 		}
+        //mostly pointless, biginteger does this already
 		public static BigInteger modinvsolve(BigInteger a,BigInteger b){
 			BigInteger x = new BigInteger(0);
 			BigInteger lastx = new BigInteger(1);
