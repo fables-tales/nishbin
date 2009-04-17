@@ -8,16 +8,15 @@ using libnish.Crypto;
 using Mono.Math;
 using System.Net.Sockets;
 
-// TODO: use Mono.Security.Protocol.Tls to make this less interuptable
+// TODO: use Mono.Security.Protocol.Tls to make this less interruptable
 // tls is a __really__ good idea for this
 namespace libnish
 {
     /// <summary>
-    /// base class for connections in nishbin 
+    /// base class for encrypted connections in nishbin 
     /// </summary>    
     public abstract class EncryptedConnection
     {
-        
 		string IP;
         int Port;
 
@@ -145,12 +144,12 @@ namespace libnish
 				
             }
 
-            bw.Write(aes.encrypt(data));
+            bw.Write(aes.Encrypt(data));
         }
 
         protected byte[] ReceiveAndDecrypt(int bytes)
         {
-            return aes.decrypt(br.ReadBytes(bytes));
+            return aes.Decrypt(br.ReadBytes(bytes));
         }
 
         /// <summary>
@@ -177,6 +176,11 @@ namespace libnish
 				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
 			// the line below this one is slightly arse
 			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
+
+            //Console.WriteLine("*** ACTIVATING CRYPTO SUPER POWERS ***\n(hack in encryptedconnection.cs line something, end of Handshake())\n");
+            //aes.livemypretties();
+            //aes.livemypretties();
+
         }
 
         private byte[] DoDH(bool IVNotKey)
