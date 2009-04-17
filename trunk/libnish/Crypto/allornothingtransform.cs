@@ -103,7 +103,7 @@ namespace libnish.Crypto
 			aes aes = new aes(this.key,this.iv);
 			chunks.Clear();
 			for(int i=0 ;i<this.message.Count;i++){
-				chunks.Add(aes.encrypt(this.message[i]));
+				chunks.Add(aes.Encrypt(this.message[i]));
 			}			
 			
 		}
@@ -111,7 +111,7 @@ namespace libnish.Crypto
 			aes aes = new aes(this.key,this.iv);
 			message.Clear();
 			for(int i=0;i<this.chunks.Count;i++){
-				message.Add(aes.decrypt(this.chunks[i]));
+				message.Add(aes.Decrypt(this.chunks[i]));
 			}
 			
 		}
