@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>libnish</RootNamespace>
     <AssemblyName>libnish</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
@@ -44,11 +44,18 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.4.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>deps\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>deps\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
@@ -81,11 +88,8 @@
     <Compile Include="TrapdoorManager.cs" />
     <Compile Include="Crypto\uuid.cs" />
     <Compile Include="Crypto\Math\math.cs" />
-    <Compile Include="Crypto\aes.cs" />
     <Compile Include="Crypto\rsa.cs" />
     <Compile Include="Crypto\allornothingtransform.cs" />
-    <Compile Include="Debug\skynet.cs" />
-    <Compile Include="Crypto\ReplacementAes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />
@@ -94,6 +98,9 @@
     <EmbeddedResource Include="Debug\NetWatcher.resx">
       <DependentUpon>NetWatcher.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
