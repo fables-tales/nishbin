@@ -59,6 +59,9 @@ namespace libnish
 
                     while (true)
                     {
+                        if (RecvBuffer.Count == 0)
+                            return null;
+
                         byte b = RecvBuffer.Dequeue();
 
                         if (b == (byte)'\n')

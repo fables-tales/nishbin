@@ -13,7 +13,7 @@ namespace TestPacketeer
     {
         static void Main(string[] args)
         {
-            TcpListenerPeerFinder tlpf = new TcpListenerPeerFinder(new System.Net.IPEndPoint(System.Net.IPAddress.Any, 9001), true);
+            TcpListenerPeerFinder tlpf = new TcpListenerPeerFinder(new System.Net.IPEndPoint(System.Net.IPAddress.Any, int.Parse(Console.ReadLine())), true);
             DebugPeerFinder dpf = new DebugPeerFinder();
 
             PeerManager pm = new PeerManager(new Peer[] { }, new PeerFinder[] { tlpf, dpf }, Limits.Default, 10, 10);
