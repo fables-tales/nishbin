@@ -85,6 +85,7 @@
     <Compile Include="Crypto\rsa.cs" />
     <Compile Include="Crypto\allornothingtransform.cs" />
     <Compile Include="Debug\skynet.cs" />
+    <Compile Include="Crypto\ReplacementAes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />
