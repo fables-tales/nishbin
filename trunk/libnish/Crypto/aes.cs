@@ -84,7 +84,7 @@ namespace libnish.Crypto
                 throw new ArgumentException("input is not the correct length");
             }
             byte[] output = new byte[16];
-            
+            input.CopyTo(output,0);
             output = aeshandler.Decrypt(output);
             for (int i =0;i<16;i++){
                 output[i] = (byte)(output[i]^DecState[i]);
