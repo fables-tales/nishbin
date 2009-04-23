@@ -13,6 +13,8 @@ namespace TestPacketeer
     {
         static void Main(string[] args)
         {
+            Console.Write("Listen port> ");
+
             TcpListenerPeerFinder tlpf = new TcpListenerPeerFinder(new System.Net.IPEndPoint(System.Net.IPAddress.Any, int.Parse(Console.ReadLine())), true);
             DebugPeerFinder dpf = new DebugPeerFinder();
 

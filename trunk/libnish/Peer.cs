@@ -38,10 +38,12 @@ namespace libnish
         {
             get
             {
-                lock (RecvBuffer)
-                {
+                // TODO: Delete these commented out lines completely.
+                // Removed b/c they're useless and returning a bool is an atomic operation, afaik.
+                //lock (RecvBuffer)
+                //{
                     return MsgAvailable;
-                }
+                //}
             }
         }
 
@@ -60,7 +62,7 @@ namespace libnish
                     while (true)
                     {
                         if (RecvBuffer.Count == 0)
-                            return null;
+                            throw new Exception("Serious error in TryGetPacket -- threading is failing. Check threading, check if PacketAvailable (which locks the buffer and reads MsgAvailable) is lying or not updated properly in Poll().");
 
                         byte b = RecvBuffer.Dequeue();
 
@@ -106,6 +108,8 @@ namespace libnish
                     MsgAvailable = true;
                 else
                 {
+                    MsgAvailable = false;
+
                     // we failin' a limit here?
                     if (RecvBuffer.Count > this.Limits.PushPacketSizeHardLimit)
                         throw new InvalidDataException("PushPacketSizeHardLimit exceeded.  No valid push packets found within the limit.");
