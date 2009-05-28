@@ -10,18 +10,22 @@ namespace libnish
 	{
 		public List<string> uuids;
 		
-		public MetaNotifyPacketHandler()
+		public MetaNotifyPacketHandler(DataManager d):base(d)
 		{
 			this.uuids = new List<string>();
 		}
 		public override void Handle (Packet p)
 		{
-			if (p is MetaNotifyPacket){
+			if (p is MetaNotifyPacket)
+			{
 				MetaNotifyPacket convert = (MetaNotifyPacket)p;
-				lock(this.uuids){
+				lock(this.uuids)
+				{
 					this.uuids.Add(convert.ContainingUUID);
 				}
-			} else{
+			} 
+			else
+			{
 				throw new ArgumentException("wrong type of packet passed");
 			}
 		}
