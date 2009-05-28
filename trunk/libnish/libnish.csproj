@@ -40,10 +40,6 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.4.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>deps\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>deps\Mono.Security.dll</HintPath>
@@ -113,5 +109,11 @@
   -->
   <ItemGroup>
     <Folder Include="PacketHandlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="BouncyCastleCrypto\BouncyCastleCrypto.csproj">
+      <Project>{52254478-7319-4750-9EA8-9FCB0E57A696}</Project>
+      <Name>BouncyCastleCrypto</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
