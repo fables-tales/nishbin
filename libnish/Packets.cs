@@ -35,7 +35,8 @@ namespace libnish
             }
         }
     }
-
+	//todo: add a max cache time
+	//so that packets aren't cached for more time than they need to be
     public abstract class Packet
     {
         internal byte[] Content;
