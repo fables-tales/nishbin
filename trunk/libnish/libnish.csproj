@@ -90,6 +90,7 @@
     <Compile Include="OutgoingPacketCacheDetail.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="IncomingPacketDetail.cs" />
+    <Compile Include="TrapDoorPackets.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />

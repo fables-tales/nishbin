@@ -28,7 +28,7 @@ namespace libnish
 
         int TargetPeerCount;
         int MaxPeerCount;
-		MetaNotifyPacketHandler MNPHandler = new MetaNotifyPacketHandler();
+		//MetaNotifyPacketHandler MNPHandler = new MetaNotifyPacketHandler();
         int BigFuckingConnectingCounter = 0;
 
         bool P2PThreadRun = false;
@@ -81,9 +81,13 @@ namespace libnish
                     		}
                     		if (p is MetaNotifyPacket)
                     		{
-                        		lock (MNPHandler){
-									MNPHandler.Handle(p);
-								}
+                        		//lock (MNPHandler){
+								//	MNPHandler.Handle(p);
+								//}
+								MetaNotifyPacket mnp = (MetaNotifyPacket)p;
+								Console.WriteLine("got mnp");
+								Console.WriteLine("uuid is " + mnp.ContainingUUID+"\n");
+								
                     		}
 							
 							foreach (Peer pier in this.Peers){
@@ -102,8 +106,6 @@ namespace libnish
         }
         public void IsThisProgramSkyNetYet(){
             throw new libnish.Debug.SkynetException("This program has become skynet, please destroy it");
-            
-            
         }
         public void PushPacketToAll(Packet p)
         {
