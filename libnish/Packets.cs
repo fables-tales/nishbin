@@ -40,9 +40,20 @@ namespace libnish
     public abstract class Packet
     {
         internal byte[] Content;
-
+		internal TimeSpan keepinoutgoingcachefor = new TimeSpan(1,0,0);
+		internal TimeSpan ignoreifrereceivedwithin = new TimeSpan(5,0,0);
         public abstract PacketType Type { get; }
-
+		public TimeSpan KeepInOutGoingCacheFor{
+			get{
+				return this.keepinoutgoingcachefor;
+			}
+		}
+		public TimeSpan IgnoreIfReReceivedWithin{
+			get{
+				return this.ignoreifrereceivedwithin;
+			}
+		}
+		
         public byte[] ToUnencryptedByteArray()
         {
             return Content;
@@ -76,7 +87,8 @@ namespace libnish
 
     public class MetaNotifyPacket : Packet
     {
-        public string ContainingUUID
+        
+		public string ContainingUUID
         {
             get
             {
@@ -97,6 +109,8 @@ namespace libnish
                 throw new BadPacketException("Invalid UUID");
 
             ContainingUUID = UUID;
+			this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
+			this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
         }
 
         public MetaNotifyPacket(byte[] UnencryptedContent)
@@ -105,6 +119,8 @@ namespace libnish
 
             if (!Crypto.UUID.verifyuuid(ContainingUUID))
                 throw new BadPacketException("Bad packet - contains invalid UUID!");
+			this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
+			this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
         }
 
         public override PacketType Type
