@@ -19,7 +19,7 @@ namespace libnish
         List<Peer> Peers = new List<Peer>();
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
 		
-		List<PacketCacheDetail> PacketCache = new List<PacketCacheDetail>();
+		List<OutgoingPacketCacheDetail> OutgoingPacketCache = new List<OutgoingPacketCacheDetail>();
 		
         Thread P2PThread;
         Thread PacketProcessingThread;
@@ -61,6 +61,7 @@ namespace libnish
         {
             // todo write this
             // shouldn't this stuff only print stuff to console if debugging flags are enabled?
+			// also, shouldn't we push packets we recieve to everyone?
             while (PacketThreadRun)
             {
                 if (PacketQueue.Count > 0)
@@ -97,9 +98,9 @@ namespace libnish
 				foreach (Peer pier in Peers)
                     pier.Send(p);
             }
-			lock (PacketCache){
-				PacketCacheDetail cache = new PacketCacheDetail(p);
-				this.PacketCache.Add(cache);
+			lock (OutgoingPacketCache){
+				OutgoingPacketCacheDetail cache = new OutgoingPacketCacheDetail(p);
+				this.OutgoingPacketCache.Add(cache);
 				
 			}
         }
@@ -293,6 +294,11 @@ namespace libnish
                     {
                         NetEvents.Add(NetEventType.NewPeer, "New peer '" + p.RemoteIP + ":" + p.RemotePort.ToString() + "' added.", new object[] { p.RemoteIP, p.RemotePort }, this);
                         Peers.Add(p);
+						lock (OutgoingPacketCache){
+							foreach (OutgoingPacketCacheDetail d in OutgoingPacketCache){
+								p.Send(d.P);
+							}
+						}
                     }
                     else
                     {
