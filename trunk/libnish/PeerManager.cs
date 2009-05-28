@@ -24,7 +24,7 @@ namespace libnish
 
         int TargetPeerCount;
         int MaxPeerCount;
-
+		MetaNotifyPacketHandler MNPHandler = new MetaNotifyPacketHandler();
         int BigFuckingConnectingCounter = 0;
 
         bool P2PThreadRun = false;
@@ -64,19 +64,16 @@ namespace libnish
                 if (PacketQueue.Count > 0)
                 {
                     Packet p = PacketQueue.Dequeue();
-
-                    if (p.Type != PacketType.MetaNotify)
+					
+                    if (!(p is MetaNotifyPacket))
                     {
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
                         Console.ForegroundColor = ConsoleColor.Gray;
                     }
-                    else
+                    if (p is MetaNotifyPacket)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Got MetaNotifyPacket!");
-                        Console.WriteLine("MNP uuid contents:: " + ((MetaNotifyPacket)p).ContainingUUID);
-                        Console.ForegroundColor = ConsoleColor.Gray;
+                        MNPHandler.Handle(p);
                     }
                 }
 
