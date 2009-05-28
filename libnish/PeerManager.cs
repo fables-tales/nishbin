@@ -70,7 +70,7 @@ namespace libnish
             {
                 lock (IncomingPacketCache){
 					lock (this.Peers){
-					if (this.IncomingPacketCache.Count > 0){
+						if (this.IncomingPacketCache.Count > 0){
 							IncomingPacketDetail da = IncomingPacketCache.Dequeue();
 							Packet p = da.P;
 							if (!(p is MetaNotifyPacket))
@@ -95,7 +95,8 @@ namespace libnish
 						}
 					}					
 				}
-
+				//this is __really__ slow
+				//only 10 packets per second on the push network?
                 Thread.Sleep(100);
             }
         }
