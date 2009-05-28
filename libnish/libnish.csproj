@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -24,9 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>libnish</AssemblyName>
     <RootNamespace>libnish</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,10 +35,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>libnish</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
     <RootNamespace>libnish</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
@@ -48,7 +44,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>deps\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Security">
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>deps\Mono.Security.dll</HintPath>
     </Reference>
@@ -89,6 +85,8 @@
     <Compile Include="Crypto\allornothingtransform.cs" />
     <Compile Include="Crypto\aes.cs" />
     <Compile Include="Debug\skynet.cs" />
+    <Compile Include="PacketHandlers\PacketHandler.cs" />
+    <Compile Include="PacketHandlers\MetaNotifyPacketHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />
@@ -109,4 +107,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="PacketHandlers\" />
+  </ItemGroup>
 </Project>
