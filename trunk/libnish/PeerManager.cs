@@ -20,8 +20,8 @@ namespace libnish
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
 		
 		//these badboys are going to replace PacketQueue
-		List<OutgoingPacketCacheDetail> OutgoingPacketCache = new List<OutgoingPacketCacheDetail>();
-		List<IncomingPacketDetail> IncomingPacketCache = new List<IncomingPacketDetail>();
+		Queue<OutgoingPacketCacheDetail> OutgoingPacketCache = new Queue<OutgoingPacketCacheDetail>();
+		Queue<IncomingPacketDetail> IncomingPacketCache = new Queue<IncomingPacketDetail>();
 		
         Thread P2PThread;
         Thread PacketProcessingThread;
@@ -64,25 +64,37 @@ namespace libnish
             // todo write this
             // shouldn't this stuff only print stuff to console if debugging flags are enabled?
 			// also, shouldn't we push packets we recieve to everyone?
+			// and lock the packetqueue?
+			// and lock peers
             while (PacketThreadRun)
             {
-                if (PacketQueue.Count > 0)
-                {
-                    Packet p = PacketQueue.Dequeue();
-					
-                    if (!(p is MetaNotifyPacket))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                    }
-                    if (p is MetaNotifyPacket)
-                    {
-                        lock (MNPHandler){
-							MNPHandler.Handle(p);
+                lock (IncomingPacketCache){
+					lock (this.Peers){
+					if (this.IncomingPacketCache.Count > 0){
+							IncomingPacketDetail da = IncomingPacketCache.Dequeue();
+							Packet p = da.P;
+							if (!(p is MetaNotifyPacket))
+                    		{
+                        		Console.ForegroundColor = ConsoleColor.Cyan;
+                        		Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
+                        		Console.ForegroundColor = ConsoleColor.Gray;
+                    		}
+                    		if (p is MetaNotifyPacket)
+                    		{
+                        		lock (MNPHandler){
+									MNPHandler.Handle(p);
+								}
+                    		}
+							
+							foreach (Peer pier in this.Peers){
+								if (pier != da.Pier){
+									pier.Send(da.P);
+								}
+							}
+							this.OutgoingPacketCache.Enqueue(new OutgoingPacketCacheDetail(da.P));
 						}
-                    }
-                }
+					}					
+				}
 
                 Thread.Sleep(100);
             }
@@ -102,7 +114,7 @@ namespace libnish
             }
 			lock (OutgoingPacketCache){
 				OutgoingPacketCacheDetail cache = new OutgoingPacketCacheDetail(p);
-				this.OutgoingPacketCache.Add(cache);
+				this.OutgoingPacketCache.Enqueue(cache);
 				
 			}
         }
@@ -144,11 +156,10 @@ namespace libnish
                             pa = p.TryGetPacket();
 
                             if (pa != null){
-                                lock(PacketQueue){
-									PacketQueue.Enqueue(pa);
-								}
+                                
 								lock(IncomingPacketCache){
-									
+									IncomingPacketDetail d = new IncomingPacketDetail(pa,p);
+									IncomingPacketCache.Enqueue(d);
 								}
 							}
 								
