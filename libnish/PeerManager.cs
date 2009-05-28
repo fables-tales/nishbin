@@ -19,7 +19,9 @@ namespace libnish
         List<Peer> Peers = new List<Peer>();
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
 		
+		//these badboys are going to replace PacketQueue
 		List<OutgoingPacketCacheDetail> OutgoingPacketCache = new List<OutgoingPacketCacheDetail>();
+		List<IncomingPacketDetail> IncomingPacketCache = new List<IncomingPacketDetail>();
 		
         Thread P2PThread;
         Thread PacketProcessingThread;
@@ -141,8 +143,15 @@ namespace libnish
 
                             pa = p.TryGetPacket();
 
-                            if (pa != null)
-                                PacketQueue.Enqueue(pa);
+                            if (pa != null){
+                                lock(PacketQueue){
+									PacketQueue.Enqueue(pa);
+								}
+								lock(IncomingPacketCache){
+									
+								}
+							}
+								
                         }
                     }
                 }

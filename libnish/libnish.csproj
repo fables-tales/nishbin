@@ -89,6 +89,7 @@
     <Compile Include="PacketHandlers\MetaNotifyPacketHandler.cs" />
     <Compile Include="OutgoingPacketCacheDetail.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="IncomingPacketDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />
