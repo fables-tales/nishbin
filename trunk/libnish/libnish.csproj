@@ -87,6 +87,7 @@
     <Compile Include="Debug\skynet.cs" />
     <Compile Include="PacketHandlers\PacketHandler.cs" />
     <Compile Include="PacketHandlers\MetaNotifyPacketHandler.cs" />
+    <Compile Include="PacketCacheDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PacketFilter\readme.txt" />

@@ -18,7 +18,9 @@ namespace libnish
     {
         List<Peer> Peers = new List<Peer>();
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
-
+		
+		List<PacketCacheDetail> PacketCache = new List<PacketCacheDetail>();
+		
         Thread P2PThread;
         Thread PacketProcessingThread;
 
@@ -73,7 +75,9 @@ namespace libnish
                     }
                     if (p is MetaNotifyPacket)
                     {
-                        MNPHandler.Handle(p);
+                        lock (MNPHandler){
+							MNPHandler.Handle(p);
+						}
                     }
                 }
 
@@ -93,6 +97,11 @@ namespace libnish
 				foreach (Peer pier in Peers)
                     pier.Send(p);
             }
+			lock (PacketCache){
+				PacketCacheDetail cache = new PacketCacheDetail(p);
+				this.PacketCache.Add(cache);
+				
+			}
         }
 
         private void PeerThreadProc()
