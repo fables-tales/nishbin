@@ -39,9 +39,9 @@ namespace libnish
 	//so that packets aren't cached for more time than they need to be
     public abstract class Packet
     {
-        internal byte[] Content;
-		internal TimeSpan keepinoutgoingcachefor = new TimeSpan(1,0,0);
-		internal TimeSpan ignoreifrereceivedwithin = new TimeSpan(5,0,0);
+        protected byte[] Content;
+		protected TimeSpan keepinoutgoingcachefor = new TimeSpan(1,0,0);
+		protected TimeSpan ignoreifrereceivedwithin = new TimeSpan(5,0,0);
         public abstract PacketType Type { get; }
 		public TimeSpan KeepInOutGoingCacheFor{
 			get{
@@ -131,7 +131,8 @@ namespace libnish
 
     public class PeerNotifyPacket : Packet
     {
-        /// <summary>
+        
+		/// <summary>
         /// Builds a new PeerNotifyPacket, using the provided peer addresses.
         /// </summary>
         /// <param name="Addresses">Array of peer addresses to be included. Each address should be in the format IP:PORT. (e.g. 127.0.0.1:1336)</param>
