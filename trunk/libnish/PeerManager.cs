@@ -76,6 +76,13 @@ namespace libnish
 						}
 					}
 				}
+				lock(OutgoingPacketCache){
+					foreach (OutgoingPacketCacheDetail cd in this.OutgoingPacketCache){
+						if (cd.Expire <= DateTime.Now){
+							OutgoingPacketCache.Remove(cd);
+						}
+					}
+				}	
 				lock (IncomingPacketQueue){
 					lock (this.Peers){
 						if (this.IncomingPacketQueue.Count > 0){
@@ -105,12 +112,8 @@ namespace libnish
 							}
 							lock(this.OutgoingPacketCache){
 								this.OutgoingPacketCache.Add(new OutgoingPacketCacheDetail(da.P));
-								foreach (OutgoingPacketCacheDetail cd in this.OutgoingPacketCache){
-									if (cd.Expire <= DateTime.Now){
-										OutgoingPacketCache.Remove(cd);
-									}
-								}
-							}
+							}	
+							
 						}
 					}					
 				}
