@@ -30,7 +30,7 @@ namespace libnish
 		{
 			this.pier = pier;
 			this.p = p;
-			this.time = DateTime.Now;
+			this.time = DateTime.Now+p.IgnoreIfReReceivedWithin;
 			
 		}
 	}

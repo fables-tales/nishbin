@@ -8,21 +8,21 @@ namespace libnish
 	public class OutgoingPacketCacheDetail
 	{
 		private Packet p;
-		private DateTime sent;
+		private DateTime expire;
 		public Packet P{
 			get{
 				return this.p;
 			}
 		}
-		public DateTime Sent{
+		public DateTime Expire{
 			get{
-				return this.sent;
+				return this.expire;
 			}
 		}
 		
 		public OutgoingPacketCacheDetail(Packet p){
 			this.p = p;
-			this.sent = DateTime.Now;
+			this.expire = DateTime.Now+p.KeepInOutGoingCacheFor;
 		}
 	}
 }

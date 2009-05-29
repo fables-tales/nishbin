@@ -20,8 +20,9 @@ namespace libnish
         List<PeerFinder> PeerFinders = new List<PeerFinder>();
 		
 		//these badboys are going to replace PacketQueue
-		Queue<OutgoingPacketCacheDetail> OutgoingPacketCache = new Queue<OutgoingPacketCacheDetail>();
-		Queue<IncomingPacketDetail> IncomingPacketCache = new Queue<IncomingPacketDetail>();
+		List<OutgoingPacketCacheDetail> OutgoingPacketCache = new List<OutgoingPacketCacheDetail>();
+		List<IncomingPacketDetail> IncomingPacketCache = new List<IncomingPacketDetail>();
+		Queue<IncomingPacketDetail> IncomingPacketQueue = new Queue<IncomingPacketDetail>();
 		
         Thread P2PThread;
         Thread PacketProcessingThread;
@@ -68,10 +69,17 @@ namespace libnish
 			// and lock peers
             while (PacketThreadRun)
             {
-                lock (IncomingPacketCache){
+                lock(IncomingPacketCache){
+					foreach (IncomingPacketDetail da in this.IncomingPacketCache){
+						if (da.Time <= DateTime.Now){
+							IncomingPacketCache.Remove(da);
+						}
+					}
+				}
+				lock (IncomingPacketQueue){
 					lock (this.Peers){
-						if (this.IncomingPacketCache.Count > 0){
-							IncomingPacketDetail da = IncomingPacketCache.Dequeue();
+						if (this.IncomingPacketQueue.Count > 0){
+							IncomingPacketDetail da = IncomingPacketQueue.Dequeue();
 							Packet p = da.P;
 							if (!(p is MetaNotifyPacket))
                     		{
@@ -95,7 +103,14 @@ namespace libnish
 									pier.Send(da.P);
 								}
 							}
-							this.OutgoingPacketCache.Enqueue(new OutgoingPacketCacheDetail(da.P));
+							lock(this.OutgoingPacketCache){
+								this.OutgoingPacketCache.Add(new OutgoingPacketCacheDetail(da.P));
+								foreach (OutgoingPacketCacheDetail cd in this.OutgoingPacketCache){
+									if (cd.Expire <= DateTime.Now){
+										OutgoingPacketCache.Remove(cd);
+									}
+								}
+							}
 						}
 					}					
 				}
@@ -117,7 +132,7 @@ namespace libnish
             }
 			lock (OutgoingPacketCache){
 				OutgoingPacketCacheDetail cache = new OutgoingPacketCacheDetail(p);
-				this.OutgoingPacketCache.Enqueue(cache);
+				this.OutgoingPacketCache.Add(cache);
 				
 			}
         }
@@ -160,9 +175,24 @@ namespace libnish
 
                             if (pa != null){
                                 
-								lock(IncomingPacketCache){
-									IncomingPacketDetail d = new IncomingPacketDetail(pa,p);
-									IncomingPacketCache.Enqueue(d);
+								lock(IncomingPacketQueue){
+									lock(IncomingPacketCache){
+										bool dontadd=false;
+										foreach (IncomingPacketDetail da in this.IncomingPacketCache)
+										{
+											if (da.P.ToUnencryptedByteArray() == pa.ToUnencryptedByteArray())
+											{
+												dontadd = true;
+												break;
+											}
+										}
+										if (!dontadd)
+										{
+											IncomingPacketDetail da = new IncomingPacketDetail(pa,p);
+											this.IncomingPacketQueue.Enqueue(da);
+											this.IncomingPacketCache.Add(da);
+										}
+									}
 								}
 							}
 								
