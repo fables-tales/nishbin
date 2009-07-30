@@ -24,6 +24,8 @@ namespace libnish
 		List<IncomingPacketDetail> IncomingPacketCache = new List<IncomingPacketDetail>();
 		Queue<IncomingPacketDetail> IncomingPacketQueue = new Queue<IncomingPacketDetail>();
 		
+		DateTime LastTryGetMorePeersTime = DateTime.MinValue;
+		
         Thread P2PThread;
         Thread PacketProcessingThread;
 
@@ -60,7 +62,25 @@ namespace libnish
             PacketThreadRun = true;
             PacketProcessingThread.Start();
         }
-
+		private void RemoveExpiredPacketsFromIncomingPacketCache(){
+			lock(IncomingPacketCache){
+				foreach (IncomingPacketDetail da in this.IncomingPacketCache){
+					if (da.Time <= DateTime.Now){
+						this.IncomingPacketCache.Remove(da);
+					}
+				}
+			}
+		}
+		
+		private void RemoveExpiredPacketsFromOutgoingPacketCache(){
+			lock(OutgoingPacketCache){
+				foreach (OutgoingPacketCacheDetail cd in this.OutgoingPacketCache){
+					if (cd.Expire <= DateTime.Now){
+						this.OutgoingPacketCache.Remove(cd);
+					}
+				}
+			}
+		}
         private void PPProc()
         {
             // todo write this
@@ -70,47 +90,27 @@ namespace libnish
 			// and lock peers
             while (PacketThreadRun)
             {
-                lock(IncomingPacketCache){
-					foreach (IncomingPacketDetail da in this.IncomingPacketCache){
-						//if the packet's time stamp is before now
-						//let it back
-						if (da.Time <= DateTime.Now){
-							IncomingPacketCache.Remove(da);
-						}
-					}
-				}
-				lock(OutgoingPacketCache){
-					foreach (OutgoingPacketCacheDetail cd in this.OutgoingPacketCache){
-						if (cd.Expire <= DateTime.Now){
-							OutgoingPacketCache.Remove(cd);
-						}
-					}
-				}	
-				lock (IncomingPacketQueue){
-					lock (this.Peers){
+                this.RemoveExpiredPacketsFromIncomingPacketCache();
+				this.RemoveExpiredPacketsFromOutgoingPacketCache();	
+				lock (this.Peers){
+					lock (this.IncomingPacketQueue){
 						if (this.IncomingPacketQueue.Count > 0){
 							IncomingPacketDetail da = IncomingPacketQueue.Dequeue();
 							Packet p = da.P;
-							if (!(p is MetaNotifyPacket))
-                    		{
-                        		Console.ForegroundColor = ConsoleColor.Cyan;
-                        		Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
-                        		Console.ForegroundColor = ConsoleColor.Gray;
-                    		}
                     		if (p is MetaNotifyPacket)
                     		{
-                        		//lock (MNPHandler){
-								//	MNPHandler.Handle(p);
-								//}
 								MetaNotifyPacket mnp = (MetaNotifyPacket)p;
 								Console.WriteLine("got mnp");
 								Console.WriteLine("uuid is " + mnp.ContainingUUID+"\n");
-								
-                    		}
+                    		} else {
+								Console.ForegroundColor = ConsoleColor.Cyan;
+                        		Console.WriteLine("Got packet of type '" + p.Type.ToString() + "'. Not doing anything rly.");
+                        		Console.ForegroundColor = ConsoleColor.Gray;
+							}
 							
-							foreach (Peer pier in this.Peers){
-								if (pier != da.SendingPeer){
-									pier.Send(da.P);
+							foreach (Peer peer in this.Peers){
+								if (peer != da.SendingPeer){
+									peer.Send(p);
 								}
 							}
 							lock(this.OutgoingPacketCache){
@@ -120,8 +120,6 @@ namespace libnish
 						}
 					}					
 				}
-				//this is __really__ slow
-				//only 10 packets per second on the push network?
                 Thread.Sleep(100);
             }
         }
@@ -142,28 +140,48 @@ namespace libnish
 				
 			}
         }
+		public void AddIncomingPacket(Packet p,Peer sendingpeer){
+			lock(IncomingPacketQueue){
+				lock(IncomingPacketCache){
+					bool dontadd=false;
+					foreach (IncomingPacketDetail da in this.IncomingPacketCache)
+					{
+						if (da.P.ToUnencryptedByteArray() == p.ToUnencryptedByteArray())
+						{
+							dontadd = true;
+							break;
+						}
+					}
+					if (!dontadd)
+					{
+						IncomingPacketDetail da = new IncomingPacketDetail(p,sendingpeer);
+						this.IncomingPacketQueue.Enqueue(da);
+						this.IncomingPacketCache.Add(da);
+					}
+				}
+			}
+		}
+		private void TryGetMorePeers(){
+			if (DateTime.UtcNow < LastTryGetMorePeersTime)
+                    LastTryGetMorePeersTime = DateTime.MinValue;
+			if (BigConnectingCounter == 0 && ((DateTime.UtcNow - LastTryGetMorePeersTime).TotalMilliseconds > Limits.MsBetweenConnectionAttempts))
+            {
+                lock (Peers)
+                    if (Peers.Count < TargetPeerCount)
+                        this.ConnectMorePeers((TargetPeerCount - Peers.Count) + 2); // TODO: Expose as a setting...?
 
+                LastTryGetMorePeersTime = DateTime.UtcNow;
+            }
+
+            Thread.Sleep(50);
+		}
         private void PeerThreadProc()
         {
-            DateTime LastTryGetMorePeersTime = DateTime.MinValue;
-
+            
             while (P2PThreadRun)
             {
                 // compensate for if some nasty person changes the system time
-                if (DateTime.UtcNow < LastTryGetMorePeersTime)
-                    LastTryGetMorePeersTime = DateTime.MinValue;
-
-                if (BigConnectingCounter == 0 && ((DateTime.UtcNow - LastTryGetMorePeersTime).TotalMilliseconds > Limits.MsBetweenConnectionAttempts))
-                {
-                    lock (Peers)
-                        if (Peers.Count < TargetPeerCount)
-                            this.ConnectMorePeers((TargetPeerCount - Peers.Count) + 2); // TODO: Expose as a setting...?
-
-                    LastTryGetMorePeersTime = DateTime.UtcNow;
-                }
-
-                Thread.Sleep(50);
-
+                this.TryGetMorePeers();
                 lock (Peers)
                 {
                     foreach (Peer p in Peers)
@@ -180,25 +198,7 @@ namespace libnish
                             pa = p.TryGetPacket();
 
                             if (pa != null){
-								lock(IncomingPacketQueue){
-									lock(IncomingPacketCache){
-										bool dontadd=false;
-										foreach (IncomingPacketDetail da in this.IncomingPacketCache)
-										{
-											if (da.P.ToUnencryptedByteArray() == pa.ToUnencryptedByteArray())
-											{
-												dontadd = true;
-												break;
-											}
-										}
-										if (!dontadd)
-										{
-											IncomingPacketDetail da = new IncomingPacketDetail(pa,p);
-											this.IncomingPacketQueue.Enqueue(da);
-											this.IncomingPacketCache.Add(da);
-										}
-									}
-								}
+								this.AddIncomingPacket(pa,p);
 							}
                         }
                     }
