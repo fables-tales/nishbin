@@ -8,20 +8,29 @@ namespace libnish
 	
 	public class MetaNotifyPacketHandler:PacketHandler
 	{
-		public List<string> uuids;
+		
 		
 		public MetaNotifyPacketHandler(DataManager d):base(d)
 		{
-			this.uuids = new List<string>();
+			
 		}
 		public override void Handle (Packet p)
 		{
 			if (p is MetaNotifyPacket)
 			{
 				MetaNotifyPacket convert = (MetaNotifyPacket)p;
-				lock(this.uuids)
-				{
-					this.uuids.Add(convert.ContainingUUID);
+				lock(d){
+					bool dontadd =false;
+					foreach (MetaData data in d.AllMetaData){
+						if (data.UUID == convert.ContainingUUID){
+							dontadd = true;
+							break;
+						}
+					}
+					if (!dontadd){
+						MetaData data = new MetaData(convert.ContainingUUID);
+						d.AllMetaData.Add(data);
+					}
 				}
 			} 
 			else
