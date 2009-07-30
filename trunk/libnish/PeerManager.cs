@@ -71,6 +71,8 @@ namespace libnish
             {
                 lock(IncomingPacketCache){
 					foreach (IncomingPacketDetail da in this.IncomingPacketCache){
+						//if the packet's time stamp is before now
+						//let it back
 						if (da.Time <= DateTime.Now){
 							IncomingPacketCache.Remove(da);
 						}
@@ -198,7 +200,6 @@ namespace libnish
 									}
 								}
 							}
-								
                         }
                     }
                 }

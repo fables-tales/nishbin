@@ -7,21 +7,47 @@ namespace libnish
 	
 	public class DataManager
 	{
-		List<MetaData> AllMetaData;
+		private List<MetaData> allmetadata;
+		public List<MetaData> AllMetaData{
+			get{
+				return this.allmetadata;
+			} set{
+				this.allmetadata = value;
+			}
+		}
+		
 		
 		public DataManager()
 		{
+			this.allmetadata = new List<MetaData>();
 		}
 	}
 	public class MetaData
 	{
 		private string uuid;
-		private string filename;
-		private string filedesc;
+		public string FileName;
+		public string FileDesc;
+		
+		public string UUID{
+			get{
+				return this.uuid;
+			} set{
+				if (Crypto.UUID.verifyuuid(value)){
+					this.uuid = value;
+				} else{
+					throw new ArgumentException("invalid uuid passed");
+				}
+			}
+		}
+		
 		
 		public MetaData(string uuid)
 		{
-			this.uuid = uuid;
+			if (Crypto.UUID.verifyuuid(uuid)){
+				this.uuid = uuid;
+			} else{
+				throw new ArgumentException("invalid uuid passed");
+			}
 		}
 		/// <summary>
 		/// Loads metadata from a file on disk
@@ -29,7 +55,7 @@ namespace libnish
 		/// <param name="filepath">
 		/// A <see cref="System.String"/>
 		/// </param>
-		public static MetaData LoadMetaDataFromFile(string filepath){
+		public static List<MetaData> LoadMetaDataFromFile(string filepath){
 			throw new NotImplementedException();
 		}
 	}
