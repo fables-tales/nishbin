@@ -35,7 +35,8 @@ namespace libnish
         bool P2PThreadRun = false;
         bool PacketThreadRun = false;
         
-        List<string> BlacklistedPeers = new List<string>();
+        //why is this not a list of peers?
+		List<string> BlacklistedPeers = new List<string>();
 
         Queue<Packet> PacketQueue = new Queue<Packet>();
 
@@ -108,7 +109,7 @@ namespace libnish
                     		}
 							
 							foreach (Peer pier in this.Peers){
-								if (pier != da.Pier){
+								if (pier != da.SendingPeer){
 									pier.Send(da.P);
 								}
 							}
@@ -179,7 +180,6 @@ namespace libnish
                             pa = p.TryGetPacket();
 
                             if (pa != null){
-                                
 								lock(IncomingPacketQueue){
 									lock(IncomingPacketCache){
 										bool dontadd=false;

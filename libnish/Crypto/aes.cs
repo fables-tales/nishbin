@@ -6,48 +6,53 @@
 
 using System;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Engines;
  
 namespace libnish.Crypto
 {
     
     
     public class LowLevelAes{
-        Org.BouncyCastle.Crypto.Engines.AesFastEngine EncHandler = new Org.BouncyCastle.Crypto.Engines.AesFastEngine();
-        Org.BouncyCastle.Crypto.Engines.AesFastEngine DecHandler = new Org.BouncyCastle.Crypto.Engines.AesFastEngine();
+        AesFastEngine EncHandler = new AesFastEngine();
+        AesFastEngine DecHandler = new AesFastEngine();
         
         public LowLevelAes(byte[] key){
-            EncHandler.Init(true,new KeyParameter(key));
-            DecHandler.Init(false,new KeyParameter(key));
+            KeyParameter k = new KeyParameter(key);
+			this.EncHandler.Init(true,k);
+            this.DecHandler.Init(false,k);
             
         }
         public byte[] Decrypt(byte[] input){
             if (input.Length != 16){
                 throw new ArgumentException("bad block length");    
-            }
-            byte[] output = new byte[16];
-            DecHandler.ProcessBlock(input,0,output,0);
-            return output;
+            } else {
+            	byte[] output = new byte[16];
+            	this.DecHandler.ProcessBlock(input,0,output,0);
+            	return output;
+			}
             
         }
         
         public byte[] Encrypt(byte[] input){
             if (input.Length != 16){
                 throw new libnish.Debug.SkynetException("this program has become skynet");
-            }
-            byte[] output = new byte[16];
-            EncHandler.ProcessBlock(input,0,output,0);
-            return output;
+            } else {
+            	byte[] output = new byte[16];
+            	this.EncHandler.ProcessBlock(input,0,output,0);
+            	return output;
+			}
         }
         
     }
     
-    public class aes{
+    public class AES{
         private LowLevelAes aeshandler;        
         private byte[] EncState = new byte[16];
         private byte[] DecState = new byte[16];
-        public aes(byte[] key,byte[]iv){
+		
+        public AES(byte[] key,byte[]iv){
             if (key.Length == 32){            
-                aeshandler = new LowLevelAes(key);
+                this.aeshandler = new LowLevelAes(key);
             }
             else {
                 throw new ArgumentException("key passed is not long enough");
@@ -60,38 +65,36 @@ namespace libnish.Crypto
                 throw new ArgumentException("key passed is not long enough");                
             }
         }
-        public aes(){
-            aeshandler = new LowLevelAes(Math.math.getRandom(256).GetBytes());
-            this.EncState = Math.math.getRandom(128).GetBytes();
+		
+        public AES(){
+            this.aeshandler = new LowLevelAes(Math.getRandom(256).GetBytes());
+            this.EncState = Math.getRandom(128).GetBytes();
             this.DecState = new byte[16];
             this.EncState.CopyTo(DecState,0);
             
         }
+		
         private byte[] encrypt(byte[] input){
-            if (input.Length != 16){
-                throw new ArgumentException("input is not the correct length");
-            }
             byte[] output = new byte[16];
             for (int i=0;i<16;i++){
-                output[i] = (byte)(input[i] ^ EncState[i]);
+                output[i] = (byte)(input[i] ^ this.EncState[i]);
             }
-            output = aeshandler.Encrypt(output);
-            output.CopyTo(EncState,0);
+            output = this.aeshandler.Encrypt(output);
+            output.CopyTo(this.EncState,0);
             return output;
         }
+		
         private byte[] decrypt(byte[] input){
-            if (input.Length != 16){
-                throw new ArgumentException("input is not the correct length");
-            }
             byte[] output = new byte[16];
             input.CopyTo(output,0);
-            output = aeshandler.Decrypt(output);
+            output = this.aeshandler.Decrypt(output);
             for (int i =0;i<16;i++){
-                output[i] = (byte)(output[i]^DecState[i]);
+                output[i] = (byte)(output[i]^this.DecState[i]);
             }
-            input.CopyTo(DecState,0);
+            input.CopyTo(this.DecState,0);
             return output;
         }
+		
         public byte[] Encrypt(byte[] input){
             byte[] output = new byte[input.Length];            
             if (input.Length % 16 != 0){
@@ -105,7 +108,8 @@ namespace libnish.Crypto
             }
             return output;
         }
-        public byte[] Decrypt(byte[] input){
+        
+		public byte[] Decrypt(byte[] input){
             if (input.Length % 16 != 0){
                 throw new ArgumentException("input is not the correct length");
             }

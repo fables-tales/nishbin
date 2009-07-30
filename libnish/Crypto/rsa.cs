@@ -24,9 +24,9 @@ namespace libnish.Crypto
 		public RSAKeyPair()
 		{
 			System.Console.WriteLine("output");
-			q = Math.math.makePrime(2048);
+			q = Math.makePrime(2048);
 			System.Console.WriteLine("p done");
-			p = Math.math.makePrime(2048);
+			p = Math.makePrime(2048);
 			System.Console.WriteLine("q done");
 			n = p*q;
 			System.Console.WriteLine("n done");
@@ -77,7 +77,7 @@ namespace libnish.Crypto
 					}
                     //wat?
 					buffer = buffer << (8192 - 256);
-					buffer += (Math.math.getRandom(8192) >> 256);
+					buffer += (Math.getRandom(8192) >> 256);
 					buffer = buffer.ModPow(e,n);
 					return buffer;
 				}

@@ -20,20 +20,12 @@ namespace libnish
 
     public class BadPacketException : Exception
     {
-        string desc;
-
-        public BadPacketException(string Description)
+        
+        public BadPacketException(string Description):base(Description)
         {
-            desc = Description;
+            
         }
 
-        public override string Message
-        {
-            get
-            {
-                return desc;
-            }
-        }
     }
 	//todo: add a max cache time
 	//so that packets aren't cached for more time than they need to be
@@ -96,31 +88,35 @@ namespace libnish
             }
             set
             {
-                if (!Crypto.UUID.verifyuuid(value))
+                if (!Crypto.UUID.verifyuuid(value)){
                     throw new BadPacketException("Invalid UUID set.");
-
-                Content = System.Text.Encoding.ASCII.GetBytes("META " + value);
+				} else {
+                	Content = System.Text.Encoding.ASCII.GetBytes("META " + value);
+				}
             }
         }
 
         public MetaNotifyPacket(string UUID)
         {
-            if (!Crypto.UUID.verifyuuid(UUID))
+            if (!Crypto.UUID.verifyuuid(UUID)){
                 throw new BadPacketException("Invalid UUID");
-
-            ContainingUUID = UUID;
-			this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
-			this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
+			} else {
+            	ContainingUUID = UUID;
+				this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
+				this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
+			}
         }
 
         public MetaNotifyPacket(byte[] UnencryptedContent)
         {
             this.Content = UnencryptedContent;
 
-            if (!Crypto.UUID.verifyuuid(ContainingUUID))
+            if (!Crypto.UUID.verifyuuid(ContainingUUID)){
                 throw new BadPacketException("Bad packet - contains invalid UUID!");
-			this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
-			this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
+			} else {
+				this.ignoreifrereceivedwithin = new TimeSpan(5,0,0);
+				this.keepinoutgoingcachefor = new TimeSpan(1,0,0);
+			}
         }
 
         public override PacketType Type

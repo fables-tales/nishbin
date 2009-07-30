@@ -33,7 +33,7 @@ namespace libnish
         BigInteger key = null;
         BigInteger iv = null;
         //for every instance of aes aes that is typed, you should put a penny in the swear jar
-        aes aes;
+        AES aes;
         
         public string RemoteIP
         {
@@ -161,22 +161,19 @@ namespace libnish
             // Need to just fail silently.
 			
             // Now, what to do if both handshake at the same time is something completely different... :<
-            if (HandsShaken)
-                return;
-            else
-                HandsShaken = true;
-
-            // Get key. (first DH pass)
-            byte[] key = DoDH(false);
-
-            // Get IV! (second DH pass)
-            byte[] iv = DoDH(true);
-            
-			if (key == null || iv == null)
-				throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
-			// the line below this one is slightly arse
-			aes = new aes(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
-
+			if (!HandsShaken){
+				HandsShaken = true;					
+	            // Get key. (first DH pass)
+	            byte[] key = DoDH(false);
+	
+	            // Get IV! (second DH pass)
+	            byte[] iv = DoDH(true);
+	            
+				if (key == null || iv == null)
+					throw new Exception("Failed to build key or IV. The encrypted connection cannot be created.");
+				// the line below this one is slightly arse
+				aes = new AES(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
+			}
             //Console.WriteLine("*** ACTIVATING CRYPTO SUPER POWERS ***\n(hack in encryptedconnection.cs line something, end of Handshake())\n");
             //aes.livemypretties();
             //aes.livemypretties();
@@ -200,7 +197,8 @@ namespace libnish
 
             byte[] hash;
 
-            switch (OurEndNeedsToDoTheHandshake)
+            //seriously, a switch is not appropriate for this...
+			switch (OurEndNeedsToDoTheHandshake)
             {
                 case true: // Person A!
                     // person a: generate g and p, send to person b
@@ -261,7 +259,7 @@ namespace libnish
 					else
 						return dh.key.GetBytes();
             }
-
+			//because of using a switch, how ugly
             throw new NotSupportedException("FILE_NOT_FOUND");
         }
 

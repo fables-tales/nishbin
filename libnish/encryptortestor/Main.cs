@@ -13,9 +13,9 @@ namespace encryptortestor
     {
         public static void Main(string[] args)
         {
-            aes aes = new aes();
-            byte[] someblocks = libnish.Crypto.Math.math.getRandom(128*34).GetBytes();
-            byte[] somemoreblocks = libnish.Crypto.Math.math.getRandom(128*12).GetBytes();
+            AES aes = new AES();
+            byte[] someblocks = libnish.Crypto.Math.getRandom(128*34).GetBytes();
+            byte[] somemoreblocks = libnish.Crypto.Math.getRandom(128*12).GetBytes();
             byte[] enc1 = aes.Encrypt(someblocks);
             byte[] enc2 = aes.Encrypt(somemoreblocks);
             byte[] dec1 = aes.Decrypt(enc1);
