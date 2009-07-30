@@ -30,7 +30,7 @@ namespace libnish
         int TargetPeerCount;
         int MaxPeerCount;
 		//MetaNotifyPacketHandler MNPHandler = new MetaNotifyPacketHandler();
-        int BigFuckingConnectingCounter = 0;
+        int BigConnectingCounter = 0;
 
         bool P2PThreadRun = false;
         bool PacketThreadRun = false;
@@ -152,7 +152,7 @@ namespace libnish
                 if (DateTime.UtcNow < LastTryGetMorePeersTime)
                     LastTryGetMorePeersTime = DateTime.MinValue;
 
-                if (BigFuckingConnectingCounter == 0 && ((DateTime.UtcNow - LastTryGetMorePeersTime).TotalMilliseconds > Limits.MsBetweenConnectionAttempts))
+                if (BigConnectingCounter == 0 && ((DateTime.UtcNow - LastTryGetMorePeersTime).TotalMilliseconds > Limits.MsBetweenConnectionAttempts))
                 {
                     lock (Peers)
                         if (Peers.Count < TargetPeerCount)
@@ -242,7 +242,7 @@ namespace libnish
 
             foreach (PotentialPeer fpp in Found)
             {
-                BigFuckingConnectingCounter++;
+                BigConnectingCounter++;
                 ThreadPool.QueueUserWorkItem(delegate(object o)
                     {
                         try
@@ -251,7 +251,7 @@ namespace libnish
                         }
                         finally
                         {
-                            BigFuckingConnectingCounter--;
+                            BigConnectingCounter--;
                         }
                     });
                 
