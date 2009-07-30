@@ -9,10 +9,10 @@ using Mono.Math;
 using System.Threading;
 
 
-namespace libnish.Crypto.Math
+namespace libnish.Crypto
 {
 	
-	public static class math
+	public static class Math
 	{
 		/// <summary>
 		/// Generates a random biginteger

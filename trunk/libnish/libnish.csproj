@@ -78,7 +78,7 @@
     <Compile Include="Crypto\uuid.cs" />
     <Compile Include="Crypto\Math\math.cs" />
     <Compile Include="Crypto\rsa.cs" />
-    <Compile Include="Crypto\allornothingtransform.cs" />
+    <Compile Include="Crypto\AllOrNothingTransform.cs" />
     <Compile Include="Crypto\aes.cs" />
     <Compile Include="Debug\skynet.cs" />
     <Compile Include="PacketHandlers\PacketHandler.cs" />

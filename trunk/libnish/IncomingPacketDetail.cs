@@ -7,13 +7,13 @@ namespace libnish
 	
 	public class IncomingPacketDetail
 	{
-		private Peer pier;
+		private Peer sendingpeer;
 		private Packet p;
 		private DateTime time;
 
-		public Peer Pier {
+		public Peer SendingPeer {
 			get {
-				return this.pier;
+				return this.sendingpeer;
 			}
 		}
 		public Packet P{
@@ -26,9 +26,9 @@ namespace libnish
 				return this.time;
 			}
 		}
-		public IncomingPacketDetail(Packet p, Peer pier)
+		public IncomingPacketDetail(Packet p, Peer sendingpeer)
 		{
-			this.pier = pier;
+			this.sendingpeer = sendingpeer;
 			this.p = p;
 			this.time = DateTime.Now+p.IgnoreIfReReceivedWithin;
 			

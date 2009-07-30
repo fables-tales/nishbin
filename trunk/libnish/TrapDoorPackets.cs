@@ -63,7 +63,7 @@ namespace libnish
 			foreach (string uuid in uuids){
 				if (!Crypto.UUID.verifyuuid(uuid)){
 					for(int i=0;i<this.Content.Length;i++){
-						this.Content[i] = Crypto.Math.math.getRandom(8).GetBytes()[0];
+						this.Content[i] = Crypto.Math.getRandom(8).GetBytes()[0];
 						
 					}
 					throw new InvalidDataException("A recieved uuid was made of fail");
