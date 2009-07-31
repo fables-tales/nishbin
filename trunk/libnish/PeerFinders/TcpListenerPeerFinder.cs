@@ -43,9 +43,6 @@ namespace libnish.PeerFinders
 
         public override bool TryGetPeer(out List<PotentialPeer> PeersList)
         {
-            //MY EYEEEEEEEEES don't hurt anymore dpf dpf dpf <<<<<<<
-            // NOTE TO SELF: NO IT ISNT YOU NEED TO CLEAN UP 2nd HALF OK
-            
             if (!listenerStarted || !tListener.Pending())
             {
                 PeersList = null;
@@ -80,10 +77,7 @@ namespace libnish.PeerFinders
                     return false;
                 }
             }
-
             return true;
         }
-
-        //there was something here, then it fucked off, and it died, in a hole
     }
 }

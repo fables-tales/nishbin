@@ -177,10 +177,8 @@ namespace libnish
 		}
         private void PeerThreadProc()
         {
-            
             while (P2PThreadRun)
             {
-                // compensate for if some nasty person changes the system time
                 this.TryGetMorePeers();
                 lock (Peers)
                 {
@@ -287,10 +285,6 @@ namespace libnish
             
             // - Check if peer is already connected!
             // - Check if peer is blacklisted!
-            
-            // :(
-            // there we go.
-            // there. reloaded so tab settings should now apply a-ok.  Much betterer.
             lock (Peers)
             {
                 foreach (Peer p in Peers){
@@ -342,7 +336,6 @@ namespace libnish
         private void ConnectPotentialPeer(PotentialPeer pp)
         {
             Peer p;
-
             if (pp.TryConnect(out p))
 			{
 				lock (Peers)

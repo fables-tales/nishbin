@@ -174,9 +174,7 @@ namespace libnish
 				// the line below this one is slightly arse
 				aes = new AES(ComputeSHA256Hash(key), Convert32To16(new BigInteger(ComputeSHA256Hash(iv))));
 			}
-            //Console.WriteLine("*** ACTIVATING CRYPTO SUPER POWERS ***\n(hack in encryptedconnection.cs line something, end of Handshake())\n");
-            //aes.livemypretties();
-            //aes.livemypretties();
+            
 
         }
 
