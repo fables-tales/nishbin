@@ -46,7 +46,7 @@ namespace libnish.Crypto
 		//G and P are the variables that everyone knows.
 		public void generateGP(){
 			g = Math.makePrime(256);
-			p = Math.makePrime(256);
+			p = Math.makePrime(2048);
 		}
 		
 		//a is the private exponent of person a, k1 =  (g^a) mod p is calculated and sent to person b
